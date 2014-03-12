@@ -1,0 +1,1 @@
+/usr/bin/c++       CMakeFiles/elelo-bin.dir/main.cpp.o CMakeFiles/elelo-bin.dir/src/eleo_socket.cpp.o  -o elelo-bin -rdynamic -lboost_system-mt -lboost_filesystem-mt -lboost_random-mt -lboost_thread-mt -lpthread 
