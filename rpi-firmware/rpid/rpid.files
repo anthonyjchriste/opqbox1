@@ -6,3 +6,8 @@ rmsVoltage.cpp
 uartread.hpp
 uartread.cpp
 datastructures.hpp
+acquisitiontask.hpp
+acquisitiontask.cpp
+coredataqueue.hpp
+coresettings.cpp
+coresettings.hpp
