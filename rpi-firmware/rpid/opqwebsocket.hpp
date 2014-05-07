@@ -1,7 +1,7 @@
 #ifndef OPQWEBSOCKET_HPP
 #define OPQWEBSOCKET_HPP
 
-#include "contrib/easywsclient/easywsclient.hpp"
+#include "contrib/easywsclient.hpp"
 
 #include<string>
 

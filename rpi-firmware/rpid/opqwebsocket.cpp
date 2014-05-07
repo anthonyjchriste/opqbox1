@@ -1,6 +1,6 @@
 #include "coresettings.hpp"
 #include "opqwebsocket.hpp"
-#include "contrib/easywsclient/easywsclient.hpp"
+#include "contrib/easywsclient.hpp"
 #include <assert.h>
 #include <stdio.h>
 
