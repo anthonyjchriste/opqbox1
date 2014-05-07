@@ -1,4 +1,4 @@
 rpi-firmware/rpid/opqd
 rpi-firmware/rpid/*.o
 rpi-firmware/rpid/*.autosave
-
+rpi-firmware/rpid/rpid.creator.user.*

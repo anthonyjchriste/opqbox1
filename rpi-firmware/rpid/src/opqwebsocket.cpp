@@ -11,9 +11,9 @@ OpqWebsocket::OpqWebsocket()
 }
 
 auto cb = [](std::string message)
-    {
-        printf("%s\n", message.c_str());
-    };
+{
+    printf("%s\n", message.c_str());
+};
 
 void OpqWebsocket::listen()
 {
