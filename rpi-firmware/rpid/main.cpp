@@ -7,7 +7,7 @@
 #include "uartread.hpp"
 #include "coresettings.hpp"
 #include <string>
-
+#include "acquisitiontask.hpp"
 using namespace std;
 
 void fftRmsTest()
@@ -43,5 +43,12 @@ int main(int argc, char** argv)
 {
     OpqSettings *set = OpqSettings::Instance();
     cout << set->loadFromFile(std::string("settings.set")) << endl;
-    set->saveToFile("settings2.set");
+    FrameQueuePointer acqQ(new FrameQueue);
+    AcquisitionTask *acq = new AcquisitionTask(acqQ);
+    boost::thread acqT = boost::thread(&AcquisitionTask::run, acq);
+    while(true)
+    {
+        delete acqQ->pop();
+        cout << "Poped" << endl;
+    }
 }

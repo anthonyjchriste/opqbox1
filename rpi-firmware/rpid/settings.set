@@ -1,1 +1,2 @@
 uart.port:S:/dev/ttyAMA0
+uart.blockSize:I:100

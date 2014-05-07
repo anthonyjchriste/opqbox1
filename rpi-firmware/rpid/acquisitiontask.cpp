@@ -12,15 +12,19 @@ AcquisitionTask::AcquisitionTask(FrameQueuePointer oq) throw(std::runtime_error&
 
 void AcquisitionTask::run()
 {
+    OpqSettings* set = OpqSettings::Instance();
     try
     {
         while(true)
         {
-
+            int blockSize = boost::get<int>(set->getSetting("uart.port"));
+            OpqFrame* next = uartRead(uart_, blockSize);
+            oq_->push(next);
+            boost::this_thread::interruption_point();
         }
     }
     catch(boost::thread_interrupted &e)
     {
-
+        return;
     }
 }

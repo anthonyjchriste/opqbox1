@@ -3,7 +3,7 @@
 
 #include "contrib/easywsclient.hpp"
 
-#include<string>
+#include <string>
 
 class OpqWebsocket
 {
@@ -13,7 +13,7 @@ public:
 private:
     std::string wsUrl_;
     easywsclient::WebSocket::pointer ws_;
-    void handleMessage(const std::string & message);
+    void handleMessage(std::string & message);
 };
 
 #endif // OPQWEBSOCKET_HPP
