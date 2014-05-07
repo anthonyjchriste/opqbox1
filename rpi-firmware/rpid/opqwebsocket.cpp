@@ -1,10 +1,7 @@
 #include "coresettings.hpp"
 #include "opqwebsocket.hpp"
-#include <assert.h>
 #include <stdio.h>
 #include <boost/thread.hpp>
-#include <functional>
-#include <iostream>
 
 OpqWebsocket::OpqWebsocket()
 {
