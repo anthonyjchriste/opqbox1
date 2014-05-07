@@ -13,7 +13,7 @@ public:
 private:
     std::string wsUrl_;
     easywsclient::WebSocket::pointer ws_;
-    void handleMessage(std::string & message);
+    void handleMessage(std::string &message);
 };
 
 #endif // OPQWEBSOCKET_HPP
