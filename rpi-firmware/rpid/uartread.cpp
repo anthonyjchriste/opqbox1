@@ -8,6 +8,8 @@
 #include <iostream>
 #include <sys/time.h>
 #include <unistd.h>
+#include <boost/thread/thread.hpp>
+
 using namespace std;
 
 
@@ -22,12 +24,12 @@ int ttySetRaw(int fd, struct termios *prevTermios)
         *prevTermios = t;
 
     t.c_lflag &= ~(ICANON | ISIG | IEXTEN | ECHO);
-                        /* Noncanonical mode, disable signals, extended
+    /* Noncanonical mode, disable signals, extended
                            input processing, and echoing */
 
     t.c_iflag &= ~(BRKINT | ICRNL | IGNBRK | IGNCR | INLCR |
-                      INPCK | ISTRIP | IXON | PARMRK);
-                        /* Disable special handling of CR, NL, and BREAK.
+                   INPCK | ISTRIP | IXON | PARMRK);
+    /* Disable special handling of CR, NL, and BREAK.
                            No 8th-bit stripping or parity error handling.
                            Disable START/STOP output flow control. */
 
@@ -54,29 +56,36 @@ bool uartInit(Msp430Uart &uart)
     return true;
 }
 
-OpqFrame uartRead(Msp430Uart& uart, size_t len)
+OpqFrame* uartRead(Msp430Uart& uart, size_t len)
 {
-    OpqFrame ret;
-    ret.data = new uint16_t[len];
+    OpqFrame* ret  = new OpqFrame;
+    ret->data =std::vector<double>(len) ;
     struct timeval tv;
     gettimeofday(&tv,NULL);
-    ret.timeSec = tv.tv_sec;
-    ret.timeUsec = tv.tv_usec;
+    ret->timeSec = tv.tv_sec;
+    ret->timeUsec = tv.tv_usec;
     int index = 0;
 
     while(index < len*2)
     {
-	unsigned char a;
+        uint16_t data;
+        unsigned char a;
         int readThisTime = ::read(uart.fd, &a, sizeof(unsigned char));
         if(readThisTime == 0)
+        {
+            boost::this_thread::interruption_point();
             continue;
+        }
         if(readThisTime == 1)
             index++;
-	if(index%2 == 0)
-		ret.data[index/2] = ((uint)a << 8);
-	else
-		ret.data[index/2] |= (uint)a;
+        if(index%2 == 0)
+            data = ((uint)a << 8);
+        else
+        {
+            data |= (uint)a;
+            ret->data[index/2] = data;
+        }
     }
-    ret.size = len;
+    ret->size = len;
     return ret;
 }

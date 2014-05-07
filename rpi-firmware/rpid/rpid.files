@@ -11,3 +11,4 @@ acquisitiontask.cpp
 coredataqueue.hpp
 coresettings.cpp
 coresettings.hpp
+settings.set

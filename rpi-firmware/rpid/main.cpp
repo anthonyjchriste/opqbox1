@@ -5,6 +5,8 @@
 #include "powerSpectrum.hpp"
 #include "rmsVoltage.hpp"
 #include "uartread.hpp"
+#include "coresettings.hpp"
+#include <string>
 
 using namespace std;
 
@@ -28,14 +30,18 @@ void uartTest()
     Msp430Uart urt;
     urt.path = "/dev/ttyAMA0";
     cout << "Openning uart " << (int)uartInit(urt) << endl;
-    OpqFrame next = uartRead(urt, 1000);
-    for(int i = 0; i< next.size; i++)
+    OpqFrame *next = uartRead(urt, 1000);
+    for(int i = 0; i< next->size; i++)
     {
-        cout << next.data[i] << endl;
+        cout << next->data[i] << endl;
     }
+    delete next;
 }
+
 
 int main(int argc, char** argv)
 {
-    uartTest();
+    OpqSettings *set = OpqSettings::Instance();
+    cout << set->loadFromFile(std::string("settings.set")) << endl;
+    set->saveToFile("settings2.set");
 }

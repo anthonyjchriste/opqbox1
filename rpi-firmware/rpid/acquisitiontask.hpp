@@ -2,16 +2,17 @@
 #define ACQUISITIONTASK_HPP
 #include "uartread.hpp"
 #include "datastructures.hpp"
-#include "boost/thread.hpp"
 
+#include <boost/thread.hpp>
+#include <stdexcept>
 class AcquisitionTask
 {
 public:
-    AcquisitionTask(FrameQueuePointer oq);
-    bool initialize();
+    AcquisitionTask(FrameQueuePointer oq) throw(std::runtime_error&);
     void run();
 private:
     FrameQueuePointer oq_;
+    Msp430Uart uart_;
 };
 
 #endif // ACQUISITIONTASK_HPP

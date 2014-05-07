@@ -21,7 +21,7 @@ struct OpqFrame
 {
     uint32_t timeSec;
     uint32_t timeUsec;
-    uint16_t*  data;
+    std::vector<double>  data;
     std::vector<double>  fft;
     size_t size;
     OpqParameters parameters;

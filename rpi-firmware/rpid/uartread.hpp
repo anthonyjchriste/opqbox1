@@ -16,6 +16,6 @@ struct Msp430Uart
 
 bool uartInit(Msp430Uart &uart);
 
-OpqFrame uartRead(Msp430Uart &uart, size_t len);
+OpqFrame* uartRead(Msp430Uart &uart, size_t len);
 
 #endif // UARTREAD_HPP
