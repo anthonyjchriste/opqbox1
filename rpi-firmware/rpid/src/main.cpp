@@ -45,13 +45,13 @@ int main(int argc, char** argv)
 {
     OpqSettings *set = OpqSettings::Instance();
     set->loadFromFile(std::string("settings.set"));
-
+    /*
     OpqWebsocket opqWebsocket;
     opqWebsocket.messages.push("Hello, ");
     opqWebsocket.messages.push("world.");
-    opqWebsocket.listen();
+    //opqWebsocket.listen();
+*/
 
-    /*
     FrameQueuePointer acqQ(new FrameQueue);
     FrameQueuePointer fftQ(new FrameQueue);
 
@@ -59,13 +59,23 @@ int main(int argc, char** argv)
     PowerTransformTask *fft = new PowerTransformTask(acqQ, fftQ);
     boost::thread acqT = boost::thread(&AcquisitionTask::run, acq);
     boost::thread fftT = boost::thread(&PowerTransformTask::run, fft);
+    int index = 0;
     while(true)
     {
-        OpqFrame* frame  = fftQ->pop();
-        for(int i = 0; i< frame->fft.size(); i++)
-            cout << frame->fft[i] << endl;
-        delete frame;
-        exit(0);
+        if (index <100)
+        {
+            OpqFrame* frame  = fftQ->pop();
+            for(int i = 0; i< frame->fft.size(); i++)
+                cout << frame->fft[i] << endl;
+            for(int i = 0; i< frame->fft.size(); i++)
+                cout << frame->data[i] << endl;
+            delete frame;
+            index++;
+        }
+        else
+        {
+            exit(0);
+        }
     }
-    */
+
 }
