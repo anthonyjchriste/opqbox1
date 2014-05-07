@@ -1,7 +1,7 @@
-FILES = rmsVoltage.cpp powerSpectrum.cpp main.cpp uartread.cpp coresettings.cpp acquisitiontask.cpp opqwebsocket.cpp powertransformtask.cpp
+FILES = rmsVoltage.cpp powerSpectrum.cpp main.cpp uartread.cpp coresettings.cpp acquisitiontask.cpp opqwebsocket.cpp
 OBJECTS = $(FILES:%.cpp=%.o)
 LINK_FLAGS = `pkg-config --libs gsl` -lboost_system -lboost_thread
-CPP = g++
+CPP = g++ -std=c++0x
 
 %.o: %.cpp
 	$(CPP) -c -o $@  $<

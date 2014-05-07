@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <boost/thread.hpp>
 #include <functional>
+#include <iostream>
 
 OpqWebsocket::OpqWebsocket()
 {
@@ -12,10 +13,10 @@ OpqWebsocket::OpqWebsocket()
     ws_ = easywsclient::WebSocket::from_url(wsUrl_);
 }
 
-void OpqWebsocket::handleMessage(std::string &message)
-{
-    printf("received %s\n", message.c_str());
-}
+auto cb = [](std::string message)
+    {
+        printf("%s\n", message.c_str());
+    };
 
 void OpqWebsocket::listen()
 {
@@ -27,14 +28,9 @@ void OpqWebsocket::listen()
         }
 
         ws_->poll();
-        //ws_->dispatch(handleMessage);
-        ws_->dispatch(*this);
+        ws_->dispatch(cb);
 
         boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
-
     }
 }
 
-void OpqWebsocket::operator ()(std::string message) {
-    handleMessage(message);
-}

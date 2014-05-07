@@ -9,6 +9,7 @@
 #include <string>
 #include "acquisitiontask.hpp"
 #include "powertransformtask.hpp"
+#include "opqwebsocket.hpp"
 using namespace std;
 
 void fftRmsTest()
@@ -44,6 +45,13 @@ int main(int argc, char** argv)
 {
     OpqSettings *set = OpqSettings::Instance();
     set->loadFromFile(std::string("settings.set"));
+
+    OpqWebsocket opqWebsocket;
+    opqWebsocket.messages.push("Hello, ");
+    opqWebsocket.messages.push("world.");
+    opqWebsocket.listen();
+
+    /*
     FrameQueuePointer acqQ(new FrameQueue);
     FrameQueuePointer fftQ(new FrameQueue);
 
@@ -59,4 +67,5 @@ int main(int argc, char** argv)
         delete frame;
         exit(0);
     }
+    */
 }
