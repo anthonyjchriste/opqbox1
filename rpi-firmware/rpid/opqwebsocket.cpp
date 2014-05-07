@@ -2,6 +2,8 @@
 #include "opqwebsocket.hpp"
 #include <assert.h>
 #include <stdio.h>
+#include <boost/thread.hpp>
+#include <functional>
 
 OpqWebsocket::OpqWebsocket()
 {
@@ -12,14 +14,27 @@ OpqWebsocket::OpqWebsocket()
 
 void OpqWebsocket::handleMessage(std::string &message)
 {
-    printf("%s\n", message.c_str());
+    printf("received %s\n", message.c_str());
 }
 
 void OpqWebsocket::listen()
 {
     while(ws_->getReadyState() != easywsclient::WebSocket::CLOSED) {
+        // Check for messages
+        while(!messages.empty()) {
+            ws_->send(messages.front());
+            messages.pop();
+        }
+
         ws_->poll();
         //ws_->dispatch(handleMessage);
+        ws_->dispatch(*this);
+
+        boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
+
     }
 }
 
+void OpqWebsocket::operator ()(std::string message) {
+    handleMessage(message);
+}
