@@ -1,6 +1,6 @@
 #include "acquisitiontask.hpp"
 #include "coresettings.hpp"
-
+#include <boost/thread.hpp>
 AcquisitionTask::AcquisitionTask(FrameQueuePointer oq) throw(std::runtime_error&)
 {
     oq_ = oq;

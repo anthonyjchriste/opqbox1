@@ -8,6 +8,7 @@
 #include "coresettings.hpp"
 #include <string>
 #include "acquisitiontask.hpp"
+#include "powertransformtask.hpp"
 using namespace std;
 
 void fftRmsTest()
@@ -42,13 +43,20 @@ void uartTest()
 int main(int argc, char** argv)
 {
     OpqSettings *set = OpqSettings::Instance();
-    cout << set->loadFromFile(std::string("settings.set")) << endl;
+    set->loadFromFile(std::string("settings.set"));
     FrameQueuePointer acqQ(new FrameQueue);
+    FrameQueuePointer fftQ(new FrameQueue);
+
     AcquisitionTask *acq = new AcquisitionTask(acqQ);
+    PowerTransformTask *fft = new PowerTransformTask(acqQ, fftQ);
     boost::thread acqT = boost::thread(&AcquisitionTask::run, acq);
+    boost::thread fftT = boost::thread(&PowerTransformTask::run, fft);
     while(true)
     {
-        delete acqQ->pop();
-        cout << "Poped" << endl;
+        OpqFrame* frame  = fftQ->pop();
+        for(int i = 0; i< frame->fft.size(); i++)
+            cout << frame->fft[i] << endl;
+        delete frame;
+        exit(0);
     }
 }

@@ -2,8 +2,6 @@
 #define ACQUISITIONTASK_HPP
 #include "uartread.hpp"
 #include "datastructures.hpp"
-
-#include <boost/thread.hpp>
 #include <stdexcept>
 class AcquisitionTask
 {

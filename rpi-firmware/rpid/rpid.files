@@ -18,3 +18,5 @@ contrib/easywsclient/easywsclient.cpp
 contrib/easywsclient/easywsclient.hpp
 contrib/easywsclient.cpp
 contrib/easywsclient.hpp
+powertransformtask.hpp
+powertransformtask.cpp
