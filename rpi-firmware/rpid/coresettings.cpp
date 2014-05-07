@@ -65,7 +65,7 @@ bool OpqSettings::loadFromFile(std::string filename)
         std::string value = strs[2];
         for(int i = 3; i< strs.size(); i++)
         {
-            value += strs[i];
+            value +=":" +  strs[i];
         }
         boost::algorithm::trim(key);
         boost::algorithm::trim(type);

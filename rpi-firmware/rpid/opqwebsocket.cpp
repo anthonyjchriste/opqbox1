@@ -15,7 +15,8 @@ void OpqWebsocket::handleMessage(std::string &message)
     printf("%s\n", message.c_str());
 }
 
-void OpqWebsocket::listen() {
+void OpqWebsocket::listen()
+{
     while(ws_->getReadyState() != easywsclient::WebSocket::CLOSED) {
         ws_->poll();
         //ws_->dispatch(handleMessage);

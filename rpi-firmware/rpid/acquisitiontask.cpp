@@ -17,7 +17,7 @@ void AcquisitionTask::run()
     {
         while(true)
         {
-            int blockSize = boost::get<int>(set->getSetting("uart.port"));
+            int blockSize = boost::get<int>(set->getSetting("uart.block_size"));
             OpqFrame* next = uartRead(uart_, blockSize);
             oq_->push(next);
             boost::this_thread::interruption_point();
