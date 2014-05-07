@@ -12,3 +12,7 @@ coredataqueue.hpp
 coresettings.cpp
 coresettings.hpp
 settings.set
+opqwebsocket.hpp
+opqwebsocket.cpp
+contrib/easywsclient/easywsclient.cpp
+contrib/easywsclient/easywsclient.hpp
