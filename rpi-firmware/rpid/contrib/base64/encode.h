@@ -9,13 +9,12 @@ For details, see http://sourceforge.net/projects/libb64
 #define BASE64_ENCODE_H
 
 #include <iostream>
+#include "cencode.h"
 
 #define BUFFERSIZE 16777216
 
 namespace base64
 {
-
-		#include "cencode.h"
 
 	struct encoder
 	{

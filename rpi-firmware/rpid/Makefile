@@ -9,7 +9,7 @@ CPP = g++ -std=c++0x
 	@$(CPP) $(COMPILE_FLAGS) -c -o $@  $<
 	@echo $@
  
-all: $(OBJECTS) easyws.o base64de.o
+all: $(OBJECTS) base64de.o base64en.o easyws.o
 	@g++ $(OBJECTS) easyws.o base64en.o base64de.o -o opqd -g $(LINK_FLAGS)
 	@echo Linking
 
@@ -17,11 +17,11 @@ easyws.o: contrib/easywsclient.cpp
 	@g++ contrib/easywsclient.cpp -c -o easyws.o
 	@echo easyws.o
 
-base64en.o: base64de.o
-
+base64en.o: 
+	@g++ contrib/base64/cencode.c -c -o base64en.o
+	@echo base64en.o
 base64de.o: contrib/base64/cencode.c contrib/base64/cdecode.c
 	@g++ contrib/base64/cdecode.c -c -o base64de.o
-	@g++ contrib/base64/cencode.c -c -o base64en.o
-	@echo base64.o
+	@echo base64de.o
 clean:
-	@rm -rf opqd $(OBJECTS) easyws.o
+	@rm -rf opqd $(OBJECTS) easyws.o base64de.o base64en.o

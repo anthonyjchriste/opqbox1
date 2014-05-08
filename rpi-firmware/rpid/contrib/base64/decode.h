@@ -9,10 +9,10 @@ For details, see http://sourceforge.net/projects/libb64
 #define BASE64_DECODE_H
 
 #include <iostream>
+#include "cdecode.h"
 
 namespace base64
 {
-		#include "cdecode.h"
 
 	struct decoder
 	{
