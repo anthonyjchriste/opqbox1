@@ -1,4 +1,4 @@
-FILES = src/rmsVoltage.cpp src/powerSpectrum.cpp src/main.cpp src/uartread.cpp src/coresettings.cpp src/acquisitiontask.cpp src/opqwebsocket.cpp src/powertransformtask.cpp
+FILES = src/rmsVoltage.cpp src/powerSpectrum.cpp src/main.cpp src/uartread.cpp src/coresettings.cpp src/acquisitiontask.cpp src/opqwebsocket.cpp src/powertransformtask.cpp src/pinctl.cpp
 OBJECTS = $(FILES:src/%.cpp=%.o)
 LINK_FLAGS = `pkg-config --libs gsl` -lboost_system -lboost_thread
 COMPILE_FLAGS = -I$(shell pwd)/lib/ -I$(shell pwd)/contrib
@@ -18,4 +18,4 @@ easyws.o: contrib/easywsclient.cpp
 	@echo easyws.o
 
 clean:
-	@rm -rf opqd *.o
+	@rm -rf opqd $(OBJECTS) easyws.o

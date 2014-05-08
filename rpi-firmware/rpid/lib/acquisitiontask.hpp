@@ -7,6 +7,7 @@ class AcquisitionTask
 {
 public:
     AcquisitionTask(FrameQueuePointer oq) throw(std::runtime_error&);
+    ~AcquisitionTask();
     void run();
 private:
     FrameQueuePointer oq_;
