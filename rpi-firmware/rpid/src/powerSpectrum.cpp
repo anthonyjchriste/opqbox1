@@ -1,4 +1,8 @@
 #include "powerSpectrum.hpp"
+//#include <gsl/gsl_errno.h>
+#include <gsl/gsl_fft_real.h>
+#include <gsl/gsl_fft_halfcomplex.h>
+#include <vector>
 
 vector<double> powerSpectrum(vector<double> input)
 {

@@ -8,10 +8,9 @@
 #include <netinet/in.h>
 #include <iostream>
 #include <fstream>
-#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/trim.hpp>
+#include <boost/algorithm/string/split.hpp>
 #include <boost/foreach.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/xml_parser.hpp>
 #include <boost/lexical_cast.hpp>
 
 OpqSettings* OpqSettings::instance_ = NULL;

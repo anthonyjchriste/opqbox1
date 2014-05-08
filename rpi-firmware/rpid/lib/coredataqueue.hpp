@@ -29,7 +29,6 @@
 #include <semaphore.h>
 #include <signal.h>
 #include <pthread.h>
-#include <boost/thread/thread.hpp>
 #include <boost/thread/condition_variable.hpp>
 #include <boost/thread/mutex.hpp>
 

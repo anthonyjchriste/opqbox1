@@ -8,7 +8,7 @@
 #include <iostream>
 #include <sys/time.h>
 #include <unistd.h>
-#include <boost/thread/thread.hpp>
+#include <boost/thread/barrier.hpp>
 
 using namespace std;
 

@@ -1,6 +1,6 @@
 #include "acquisitiontask.hpp"
 #include "coresettings.hpp"
-#include <boost/thread.hpp>
+#include <boost/thread/exceptions.hpp>
 #include "pinctl.hpp"
 
 AcquisitionTask::AcquisitionTask(FrameQueuePointer oq) throw(std::runtime_error&)

@@ -10,6 +10,8 @@
 #include "acquisitiontask.hpp"
 #include "powertransformtask.hpp"
 #include "opqwebsocket.hpp"
+
+#include <boost/thread/thread.hpp>
 using namespace std;
 
 void fftRmsTest()

@@ -3,8 +3,7 @@
 
 #include <string>
 #include <map>
-#include <boost/thread/thread.hpp>
-#include <boost/thread/mutex.hpp>
+#include <boost/thread/shared_mutex.hpp>
 #include "datastructures.hpp"
 
 class OpqSettings
