@@ -28,6 +28,7 @@ void OpqWebsocket::listen()
         ws_->dispatch(cb);
 
         boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
+
     }
 }
 

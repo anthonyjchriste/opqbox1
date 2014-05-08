@@ -17,4 +17,7 @@ src/powerSpectrum.cpp
 src/powertransformtask.cpp
 src/rmsVoltage.cpp
 src/uartread.cpp
-lib/opqpacket.h
+lib/opqpacket.hpp
+src/opqpacket.cpp
+lib/pinctl.hpp
+src/pinctl.cpp

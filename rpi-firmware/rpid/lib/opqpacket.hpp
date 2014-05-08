@@ -4,8 +4,6 @@
 #include <cstdint>
 #include <utility>
 
-#define HEADER_SIZE 59
-
 struct OpqPacketHeader {
     uint32_t magic;
     uint32_t type;
@@ -20,17 +18,7 @@ struct OpqPacketHeader {
 
 typedef std::pair<OpqPacketHeader, vector<uint_8t> > OpqPacket;
 
-uint32_t computeChecksum(OpqPacket opqPacket)
-{
-    uint32_t sum = 0;
-    uint8_t * p = &opqPacket;
-
-    for(int i = 0; i < sizeof(OpqHeaderPacket); i++) {
-        sum += p[i];
-    }
-
-    return sum;
-}
+uint32_t computeChecksum(OpqPacket opqPacket);
 
 #endif // OPQPACKET_HPP
 
