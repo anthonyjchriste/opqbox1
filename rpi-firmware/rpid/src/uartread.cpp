@@ -76,8 +76,6 @@ OpqFrame* uartRead(Msp430Uart& uart, size_t len)
             boost::this_thread::interruption_point();
             continue;
         }
-        if(readThisTime == 1)
-            index++;
         if(index%2 == 0)
             data = ((uint)a << 8);
         else
@@ -85,6 +83,7 @@ OpqFrame* uartRead(Msp430Uart& uart, size_t len)
             data |= (uint)a;
             ret->data[index/2] = data;
         }
+        index++;
     }
     ret->size = len;
     return ret;
