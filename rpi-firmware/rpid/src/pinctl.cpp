@@ -41,3 +41,8 @@ void setPinValue(std::string pin, std::string value)
 {
     writeToFile(value, "/sys/class/gpio/gpio" + pin + "/value");
 }
+
+std::string getPinValue(std::string pin)
+{
+    readValueFromFile("/sys/class/gpio/gpio" + pin + "/value");
+}

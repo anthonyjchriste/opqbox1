@@ -16,5 +16,5 @@ void exportPin(std::string pin);
 void unExportPin(std::string pin);
 void setPinDirection(std::string pin, std::string direction);
 void setPinValue(std::string pin, std::string value);
-
+std::string getPinValue(std::string pin);
 #endif // PINCTL_H
