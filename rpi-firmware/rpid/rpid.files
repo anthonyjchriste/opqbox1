@@ -21,3 +21,9 @@ lib/opqpacket.hpp
 src/opqpacket.cpp
 lib/pinctl.hpp
 src/pinctl.cpp
+contrib/base64/cdecode.c
+contrib/base64/cdecode.h
+contrib/base64/cencode.c
+contrib/base64/cencode.h
+contrib/base64/decode.h
+contrib/base64/encode.h

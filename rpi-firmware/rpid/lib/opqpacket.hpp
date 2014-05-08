@@ -2,7 +2,9 @@
 #define OPQPACKET_HPP
 
 #include <cstdint>
+#include <string>
 #include <utility>
+#include <vector>
 
 struct OpqPacketHeader {
     uint32_t magic;
@@ -16,9 +18,11 @@ struct OpqPacketHeader {
     uint32_t checksum;
 };
 
-typedef std::pair<OpqPacketHeader, vector<uint_8t> > OpqPacket;
-
+typedef std::pair<OpqPacketHeader, std::vector<unsigned char> > OpqPacket;
 uint32_t computeChecksum(OpqPacket opqPacket);
+std::string base64Encode(uint8_t bytes[]);
+std::string base64Decode(std::string encodes);
+OpqPacket makeOpqPacket(std::string encoded);
 
 #endif // OPQPACKET_HPP
 
