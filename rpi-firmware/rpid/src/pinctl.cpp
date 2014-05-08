@@ -18,7 +18,7 @@ std::string readValueFromFile(std::string path)
     f.open(path.c_str());
     if(f.is_open())
     {
-        getline(f, value);
+        std::getline(f, value);
     }
     return value;
 }
@@ -34,7 +34,12 @@ void unExportPin(std::string pin) {
 
 void setPinDirection(std::string pin, std::string direction)
 {
-    writeToFile(direction, "/sys/class/gpio" + pin + "/direction");
+    writeToFile(direction, "/sys/class/gpio/gpio" + pin + "/direction");
+}
+
+std::string getPinDirection(std::string pin)
+{
+    return readValueFromFile("/sys/class/gpio/gpio" + pin + "/direction");
 }
 
 void setPinValue(std::string pin, std::string value)
@@ -44,5 +49,10 @@ void setPinValue(std::string pin, std::string value)
 
 std::string getPinValue(std::string pin)
 {
-    readValueFromFile("/sys/class/gpio/gpio" + pin + "/value");
+    return readValueFromFile("/sys/class/gpio/gpio" + pin + "/value");
+}
+
+void togglePinValue(std::string pin)
+{
+    setPinValue(pin, (getPinValue(pin) == HIGH ? LOW : HIGH));
 }
