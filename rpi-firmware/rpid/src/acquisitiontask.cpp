@@ -11,8 +11,8 @@ AcquisitionTask::AcquisitionTask(FrameQueuePointer oq) throw(std::runtime_error&
     if(uartInit(uart_) < 0)
         throw std::runtime_error("could not initialize UART.");
     exportPin("18");
-    setPinDirection("18", IN);
-    setPinValue("18", LOW);
+    setPinDirection("18", OUT);
+    setPinValue("18", HIGH);
 }
 
 AcquisitionTask::~AcquisitionTask()
@@ -28,10 +28,10 @@ void AcquisitionTask::run()
         while(true)
         {
             int blockSize = boost::get<int>(set->getSetting("uart.block_size"));
-            uartClear(uart_);
-            setPinValue("18", HIGH);
-            OpqFrame* next = uartRead(uart_, blockSize);
+            //uartClear(uart_);
             setPinValue("18", LOW);
+            OpqFrame* next = uartRead(uart_, blockSize);
+            setPinValue("18", HIGH);
             oq_->push(next);
             boost::this_thread::interruption_point();
         }

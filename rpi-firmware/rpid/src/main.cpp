@@ -59,6 +59,7 @@ int main(int argc, char** argv)
 
     AcquisitionTask *acq = new AcquisitionTask(acqQ);
     PowerTransformTask *fft = new PowerTransformTask(acqQ, fftQ);
+    boost::this_thread::sleep(boost::posix_time::millisec(1000));
     boost::thread acqT = boost::thread(&AcquisitionTask::run, acq);
     boost::thread fftT = boost::thread(&PowerTransformTask::run, fft);
     int index = 0;
@@ -67,8 +68,8 @@ int main(int argc, char** argv)
         if (index <100)
         {
             OpqFrame* frame  = fftQ->pop();
-            //for(int i = 0; i< frame->fft.size(); i++)
-            //    cout << frame->fft[i] << endl;
+            for(int i = 0; i< frame->fft.size(); i++)
+                cout << frame->fft[i] << endl;
             for(int i = 0; i< frame->fft.size(); i++)
                 cout << frame->data[i] << endl;
             delete frame;

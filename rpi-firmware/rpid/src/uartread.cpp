@@ -110,6 +110,7 @@ void uartClear(Msp430Uart &uart)
     {
         char a;
         ::read(uart.fd, &a, sizeof(unsigned char));
+	uartClear(uart);
     }
     return;
 }
