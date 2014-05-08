@@ -27,12 +27,13 @@ void AcquisitionTask::run()
     {
         while(true)
         {
-            setPinValue("18", HIGH);
             int blockSize = boost::get<int>(set->getSetting("uart.block_size"));
+            uartClear(uart_);
+            setPinValue("18", HIGH);
             OpqFrame* next = uartRead(uart_, blockSize);
+            setPinValue("18", LOW);
             oq_->push(next);
             boost::this_thread::interruption_point();
-            setPinValue("18", LOW);
         }
     }
     catch(boost::thread_interrupted &e)

@@ -18,4 +18,6 @@ bool uartInit(Msp430Uart &uart);
 
 OpqFrame* uartRead(Msp430Uart &uart, size_t len);
 
+void uartClear(Msp430Uart &uart);
+
 #endif // UARTREAD_HPP

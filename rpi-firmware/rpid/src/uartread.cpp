@@ -77,14 +77,39 @@ OpqFrame* uartRead(Msp430Uart& uart, size_t len)
             continue;
         }
         if(index%2 == 0)
-            data = ((uint)a << 8);
+            data |= (uint)a;
         else
         {
-            data |= (uint)a;
+            data = ((uint)a << 8);
             ret->data[index/2] = data;
         }
         index++;
     }
     ret->size = len;
     return ret;
+}
+
+void uartClear(Msp430Uart &uart)
+{
+    fd_set rfds;
+    struct timeval tv;
+    int retval;
+    /* Watch stdin (fd 0) to see when it has input. */
+    FD_ZERO(&rfds);
+    FD_SET(uart.fd, &rfds);
+    /* Wait up to five seconds. */
+    tv.tv_sec = 0;
+    tv.tv_usec = 0;
+
+    retval = select(1, &rfds, NULL, NULL, &tv);
+    /* Don't rely on the value of tv now! */
+
+    if (retval == -1)
+        return;
+    if (retval)
+    {
+        char a;
+        ::read(uart.fd, &a, sizeof(unsigned char));
+    }
+    return;
 }

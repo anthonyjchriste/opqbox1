@@ -67,8 +67,8 @@ int main(int argc, char** argv)
         if (index <100)
         {
             OpqFrame* frame  = fftQ->pop();
-            for(int i = 0; i< frame->fft.size(); i++)
-                cout << frame->fft[i] << endl;
+            //for(int i = 0; i< frame->fft.size(); i++)
+            //    cout << frame->fft[i] << endl;
             for(int i = 0; i< frame->fft.size(); i++)
                 cout << frame->data[i] << endl;
             delete frame;
