@@ -10,8 +10,11 @@
 #include "acquisitiontask.hpp"
 #include "powertransformtask.hpp"
 #include "opqwebsocket.hpp"
+#include "opqpacket.hpp"
 
 #include <boost/thread/thread.hpp>
+#include <boost/date_time.hpp>
+
 using namespace std;
 
 void fftRmsTest()
@@ -47,13 +50,31 @@ int main(int argc, char** argv)
 {
     OpqSettings *set = OpqSettings::Instance();
     set->loadFromFile(std::string("settings.set"));
-    /*
-    OpqWebsocket opqWebsocket;
-    opqWebsocket.messages.push("Hello, ");
-    opqWebsocket.messages.push("world.");
-    //opqWebsocket.listen();
-*/
 
+    struct OpqPacketHeader packetHeader;
+    packetHeader.magic = 0x00C0FFEE;
+    packetHeader.type = 4;
+    packetHeader.sequenceNumber = 0;
+    packetHeader.deviceId = 12345;
+    packetHeader.timestamp = 1096906472L;
+    packetHeader.bitfield = 0;
+    for(int i = 0; i < 4; i++) packetHeader.reserved[i] = 0;
+    packetHeader.checksum = 0;
+
+    std::vector<uint8_t> payload;
+    payload.push_back(1);
+    packetHeader.payloadSize = payload.size();
+
+    OpqPacket opqPacket = std::make_pair(packetHeader, payload);
+    opqPacket.first.checksum = computeChecksum(opqPacket);
+
+    OpqWebsocket opqWebsocket;
+    opqWebsocket.messages.push(encodeOpqPacket(opqPacket));
+    opqWebsocket.listen();
+
+
+
+    /*
     FrameQueuePointer acqQ(new FrameQueue);
     FrameQueuePointer fftQ(new FrameQueue);
 
@@ -80,5 +101,6 @@ int main(int argc, char** argv)
             exit(0);
         }
     }
+    */
 
 }

@@ -1,3 +1,3 @@
 uart.port:S:/dev/ttyAMA0
 uart.block_size:I:200
-ws.url:S:ws://echo.websocket.org
+ws.url:S:ws://localhost:9000/private/ws

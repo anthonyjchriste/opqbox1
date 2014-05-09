@@ -6,7 +6,7 @@
 #include <utility>
 #include <vector>
 
-struct OpqPacketHeader {
+struct __attribute__((__packed__)) OpqPacketHeader {
     uint32_t magic;
     uint32_t type;
     uint32_t sequenceNumber;
@@ -20,10 +20,11 @@ struct OpqPacketHeader {
 
 typedef std::pair<OpqPacketHeader, std::vector<unsigned char> > OpqPacket;
 uint32_t computeChecksum(OpqPacket opqPacket);
-std::string base64Encode(uint8_t bytes[]);
+std::string base64Encode(uint8_t bytes[], int length);
 std::string base64Decode(std::string encodes);
 OpqPacket makeOpqPacket(std::string encoded);
 std::string encodeOpqPacket(OpqPacket opqPacket);
+void printHeader(OpqPacketHeader header);
 
 #endif // OPQPACKET_HPP
 

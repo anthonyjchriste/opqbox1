@@ -18,4 +18,4 @@ easyws.o: contrib/easywsclient.cpp
 	@echo easyws.o
 
 clean:
-	@rm -rf opqd $(OBJECTS) easyws.o
+	@rm -rf opqd $(OBJECTS) easyws.o base64de.o base64en.o
