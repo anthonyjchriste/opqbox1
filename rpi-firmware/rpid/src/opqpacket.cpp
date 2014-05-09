@@ -54,3 +54,11 @@ OpqPacket makeOpqPacket(std::string encoded)
 
     return std::make_pair(opqPacketHeader, payload);
 }
+
+std::string encodeOpqPacket(OpqPacket opqPacket)
+{
+    uint8_t data[sizeof(opqPacket.first) + opqPacket.second.size()];
+    std::memmove(&data, &opqPacket.first, sizeof(opqPacket.first));
+    std::memcpy(&data + sizeof(opqPacket.first), &opqPacket.second, opqPacket.second.size());
+    return base64Encode(data);
+}

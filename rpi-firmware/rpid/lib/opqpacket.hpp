@@ -23,6 +23,7 @@ uint32_t computeChecksum(OpqPacket opqPacket);
 std::string base64Encode(uint8_t bytes[]);
 std::string base64Decode(std::string encodes);
 OpqPacket makeOpqPacket(std::string encoded);
+std::string encodeOpqPacket(OpqPacket opqPacket);
 
 #endif // OPQPACKET_HPP
 
