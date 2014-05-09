@@ -53,7 +53,7 @@ int main(int argc, char** argv)
 
     struct OpqPacketHeader packetHeader;
     packetHeader.magic = 0x00C0FFEE;
-    packetHeader.type = 4;
+    packetHeader.type = OpqPacketType::PING;
     packetHeader.sequenceNumber = 0;
     packetHeader.deviceId = 2;
     packetHeader.timestamp = 1096906472L;

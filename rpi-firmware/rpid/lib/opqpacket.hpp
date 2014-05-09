@@ -18,6 +18,16 @@ struct __attribute__((__packed__)) OpqPacketHeader {
     uint32_t checksum;
 };
 
+enum OpqPacketType {
+    MEASUREMENT = 0,
+    EVENT_FREQUENCY = 1,
+    EVENT_VOLTAGE = 2,
+    EVENT_DEVICE = 3,
+    PING = 4,
+    SETTING = 5,
+    MONITOR = 6
+};
+
 typedef std::pair<OpqPacketHeader, std::vector<unsigned char> > OpqPacket;
 uint32_t computeChecksum(OpqPacket opqPacket);
 std::string base64Encode(uint8_t bytes[], int length);
