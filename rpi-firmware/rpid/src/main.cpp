@@ -55,7 +55,7 @@ int main(int argc, char** argv)
     packetHeader.magic = 0x00C0FFEE;
     packetHeader.type = 4;
     packetHeader.sequenceNumber = 0;
-    packetHeader.deviceId = 12345;
+    packetHeader.deviceId = 2;
     packetHeader.timestamp = 1096906472L;
     packetHeader.bitfield = 0;
     for(int i = 0; i < 4; i++) packetHeader.reserved[i] = 0;

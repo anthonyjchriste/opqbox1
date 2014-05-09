@@ -1,9 +1,8 @@
 #include "opqpacket.hpp"
-#include "base64/encode.h"
-#include "base64/decode.h"
 #include <cstring>
 #include <vector>
 #include <cstdint>
+#include <iostream>
 
 
 
@@ -157,8 +156,7 @@ std::string base64Encode(uint8_t bytes[], int length)
 std::string base64Decode(std::string encoded)
 {
     std::string out;
-    base64::decoder decoder;
-    decoder.decode(encoded.c_str(), (int) encoded.length(), (char *) out.c_str());
+
 
     return out;
 }
