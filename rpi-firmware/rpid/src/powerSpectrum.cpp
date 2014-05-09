@@ -25,7 +25,7 @@ vector<double> powerSpectrum(vector<double> input)
     gsl_fft_real_workspace_free (work);
     for(int i = 0; i< length; i++)
     {
-        input[i] = sqrt(reals[i*2]*reals[i*2] + reals[i*2+1] + reals[i*2+1])/length;
+        input[i] = sqrt(reals[i*2]*reals[i*2] + reals[i*2+1]*reals[i*2+1])/length;
     }
     return input;
 }
