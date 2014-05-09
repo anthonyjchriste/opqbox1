@@ -68,6 +68,8 @@ int main(int argc, char** argv)
     OpqPacket opqPacket = std::make_pair(packetHeader, payload);
     opqPacket.first.checksum = computeChecksum(opqPacket);
 
+    printHeader(opqPacket.first);
+
     OpqWebsocket opqWebsocket;
     opqWebsocket.messages.push(encodeOpqPacket(opqPacket));
     opqWebsocket.listen();

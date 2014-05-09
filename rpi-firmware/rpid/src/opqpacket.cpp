@@ -144,12 +144,6 @@ uint32_t computeChecksum(OpqPacket opqPacket)
 std::string base64Encode(uint8_t bytes[], int length)
 {
     std::string out = websocketpp::base64_encode(bytes,length);
-    for(size_t i = 0; i < out.length(); i++)
-    {
-        std::cout << out[i] << std::endl;
-    }
-    std::cout << out << std::endl;
-
     return out;
 }
 
@@ -185,10 +179,6 @@ std::string encodeOpqPacket(OpqPacket opqPacket)
     std::memmove(data, &opqPacket.first, sizeof(OpqPacketHeader));
     std::memcpy(data + sizeof(OpqPacketHeader), opqPacket.second.data(), opqPacket.second.size());
 
-    std::cout << "length:" << length << std::endl;
-    for(int i = 0; i < length; i++) {
-        //std::cout << "data[" << std::dec << i << "] = \"" << std::hex << (int) data[i] << "\"\n";
-    }
 
     std::string encoded = base64Encode(data, length);
     return encoded;
