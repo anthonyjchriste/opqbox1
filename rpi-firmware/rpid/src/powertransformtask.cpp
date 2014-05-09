@@ -8,12 +8,14 @@ PowerTransformTask::PowerTransformTask(FrameQueuePointer iq, FrameQueuePointer o
 }
 
 
-void removeBaseline(vector<double> &signal)
+void removeBaselineAndNormalize(vector<double> &signal)
 {
      double average = std::accumulate(signal.begin(), signal.end(), 0);
      average /= signal.size();
+     average /= 1<<16;
      for(size_t i = 0 ; i< signal.size(); i++)
      {
+         signal[i] /= 1<<16;
          signal[i] -= average;
      }
 }
@@ -25,7 +27,7 @@ void PowerTransformTask::run()
         while(true)
         {
             OpqFrame* next = iq_->pop();
-            removeBaseline(next->data);
+            removeBaselineAndNormalize(next->data);
             next->fft = powerSpectrum(next->data);
 
             oq_->push(next);
