@@ -12,4 +12,6 @@ void setupUart(void);
 
 void setupClock(void);
 
+void setupAdc24(void);
+
 #endif /* INIT_CLOCK_H_ */

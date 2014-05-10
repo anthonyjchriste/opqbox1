@@ -26,22 +26,36 @@ void setupClock()
 
 void setupUart()
 {
+
 	/////////////init usart as uart mode////////////////
-	P1SEL |= BIT3+BIT4;                       // P1.3,1.4 = USART0 TXD/RXD
-	U0CTL = CHAR;		// 8-bit, UART
+	P1SEL |= BIT3+BIT4;                      	// P1.3,1.4 = USART0 TXD/RXD
+	U0CTL = CHAR;								// 8-bit, UART
 	U0TCTL = SSEL1 + SSEL0;
-	ME1 |= UTXE0 + URXE0;	// Module enable
+	ME1 |= UTXE0 + URXE0;						// Module enable
 
 	UBR00=0x68;
 	UBR10=0x00;
 	UMCTL0=0x04;
 
-	UCTL0 &= ~SWRST;			// Enable usart
-	IE1 |= URXIE0;              // Enable USART0 RX interrupt
+	UCTL0 &= ~SWRST;							// Enable usart
+	IE1 |= URXIE0;             					 // Enable USART0 RX interrupt
+	//sets up the data ready flag
+	P1DIR&=~BIT2; //set as input
+	P1SEL&=~BIT2;
+	P1SEL2&=~BIT2;
+	P1REN |=BIT2;
+}
 
-	P1SEL2 |= BIT0;                           // Set SMCLK at P1.0
+void setupAdc24()
+{
+	unsigned int i;
+	SD24CTL = SD24REFON + SD24SSEL0 + SD24DIV1 + SD24XDIV0;          // 1.2V ref, MCLK divide by 12
 
-	_BIS_SR(LPM0_bits + GIE);                 // Enter LPM0 w/ interrupt
+	SD24CCTL0 = SD24LSBTOG;
 
+	SD24INCTL0 = SD24INTDLY0;                // Interrupt on 3rd sample
+	SD24CCTL0 |= SD24IE ;                     // Enable interrupt
+	for (i = 0; i < 0x3600; i++);             // Delay for 1.2V ref startup
 
+	SD24CCTL0 |= SD24SC;                      // Set bit to start conversion
 }

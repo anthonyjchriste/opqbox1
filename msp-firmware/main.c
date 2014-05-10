@@ -9,7 +9,6 @@ void main(void)
 	WDTCTL = WDTPW + WDTHOLD;            // Stop watchdog timer. This line of code is needed at the beginning of most MSP430 projects.
 	setupClock();
 	setupUart();
-	for (;;)                                   // This empty for-loop will cause the lines of code within to loop infinitely
-	{
-	}
+	setupAdc24();
+	_BIS_SR(LPM0_bits + GIE); // Enter LPM0 w/ interrupt
 }
