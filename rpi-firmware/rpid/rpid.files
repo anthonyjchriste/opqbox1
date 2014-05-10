@@ -28,3 +28,7 @@ contrib/base64/cencode.h
 contrib/base64/decode.h
 contrib/base64/encode.h
 contrib/base64.hpp
+lib/analysistask.hpp
+lib/analysistask.cpp
+lib/gausianpeak.hpp
+src/gausianpeak.cpp

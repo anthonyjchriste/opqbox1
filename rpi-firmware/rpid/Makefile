@@ -1,4 +1,4 @@
-FILES = src/rmsVoltage.cpp src/powerSpectrum.cpp src/main.cpp src/uartread.cpp src/coresettings.cpp src/acquisitiontask.cpp src/opqwebsocket.cpp src/opqpacket.cpp src/powertransformtask.cpp src/pinctl.cpp
+FILES = src/rmsVoltage.cpp src/powerSpectrum.cpp src/main.cpp src/uartread.cpp src/coresettings.cpp src/acquisitiontask.cpp src/opqwebsocket.cpp src/opqpacket.cpp src/powertransformtask.cpp src/pinctl.cpp src/gausianpeak.cpp src/analysistask.cpp
 OBJECTS = $(FILES:src/%.cpp=%.o)
 LINK_FLAGS = `pkg-config --libs gsl` -lboost_system -lboost_thread
 COMPILE_FLAGS = -I$(shell pwd)/lib/ -I$(shell pwd)/contrib
