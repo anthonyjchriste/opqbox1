@@ -15,6 +15,8 @@
 #include <boost/thread/thread.hpp>
 #include <boost/date_time.hpp>
 
+#include <endian.h>
+
 using namespace std;
 
 void fftRmsTest()
@@ -52,17 +54,18 @@ int main(int argc, char** argv)
     set->loadFromFile(std::string("settings.set"));
 
     struct OpqPacketHeader packetHeader;
-    packetHeader.magic = 0x00C0FFEE;
-    packetHeader.type = OpqPacketType::PING;
-    packetHeader.sequenceNumber = 0;
-    packetHeader.deviceId = 2;
-    packetHeader.timestamp = 1096906472L;
-    packetHeader.bitfield = 0;
+    packetHeader.magic = htobe64(0x00C0FFEE);
+    packetHeader.type = htobe32(OpqPacketType::PING);
+    packetHeader.sequenceNumber = htobe32(0);
+    packetHeader.deviceId = htobe64(12345);
+    packetHeader.timestamp = htobe64(1399677769438L);
+    packetHeader.bitfield = htobe32(0);
     for(int i = 0; i < 4; i++) packetHeader.reserved[i] = 0;
     packetHeader.checksum = 0;
 
     std::vector<uint8_t> payload;
     payload.push_back(1);
+
     packetHeader.payloadSize = payload.size();
 
     OpqPacket opqPacket = std::make_pair(packetHeader, payload);

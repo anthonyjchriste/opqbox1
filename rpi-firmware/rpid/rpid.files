@@ -27,3 +27,4 @@ contrib/base64/cencode.c
 contrib/base64/cencode.h
 contrib/base64/decode.h
 contrib/base64/encode.h
+contrib/base64.hpp

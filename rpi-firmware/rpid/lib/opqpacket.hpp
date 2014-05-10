@@ -29,11 +29,12 @@ enum OpqPacketType {
 };
 
 typedef std::pair<OpqPacketHeader, std::vector<unsigned char> > OpqPacket;
-uint32_t computeChecksum(OpqPacket opqPacket);
 std::string base64Encode(uint8_t bytes[], int length);
 std::string base64Decode(std::string encodes);
 OpqPacket makeOpqPacket(std::string encoded);
 std::string encodeOpqPacket(OpqPacket opqPacket);
+uint32_t computeChecksum(OpqPacket opqPacket);
+
 void printHeader(OpqPacketHeader header);
 
 #endif // OPQPACKET_HPP
