@@ -65,7 +65,17 @@ OpqFrame* uartRead(Msp430Uart& uart, size_t len)
     ret->timeSec = tv.tv_sec;
     ret->timeUsec = tv.tv_usec;
     int index = 0;
-
+    for(int i = 0; i< 12;)
+    {
+        unsigned char a;
+        int readThisTime = ::read(uart.fd, &a, sizeof(unsigned char));
+        if(readThisTime == 0)
+        {
+            boost::this_thread::interruption_point();
+            continue;
+        }
+        i++;
+    }
     while(index < len*2)
     {
         uint16_t data;
