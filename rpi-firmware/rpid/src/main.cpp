@@ -55,13 +55,13 @@ int main(int argc, char** argv)
 
     OpqPacket opqPacket;
     opqPacket.header.magic = 0x00C0FFEE;
-    opqPacket.header.type = OpqPacketType::PING;
+    opqPacket.header.type = OpqPacketType::EVENT_FREQUENCY;
     opqPacket.header.sequenceNumber = 0;
     opqPacket.header.deviceId = 12345;
     opqPacket.header.timestamp = 1399683477070L;
     opqPacket.header.bitfield = 0;
-    opqPacket.header.payloadSize = 1;
-    opqPacket.payload.push_back(1);
+    opqPacket.addPayload(65.2);
+    opqPacket.addPayload((uint64_t) 200L);
     opqPacket.computeChecksum();
     opqPacket.debugInfo();
 

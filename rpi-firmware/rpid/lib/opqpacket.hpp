@@ -29,7 +29,11 @@ public:
     OpqPacketHeader header;
     void computeChecksum();
     std::vector<unsigned char> payload;
-
+    void addPayload(uint8_t b);
+    void addPayload(uint32_t i);
+    void addPayload(uint64_t l);
+    void addPayload(double d);
+    void addPayload(std::string s);
 
 private:
     OpqPacketHeader headerToByteOrder();

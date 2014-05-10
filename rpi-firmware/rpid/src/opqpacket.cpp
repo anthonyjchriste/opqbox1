@@ -12,6 +12,7 @@ OpqPacket::OpqPacket()
 {
     zeroReserved();
     header.checksum = 0;
+    header.payloadSize = 0;
 }
 
 OpqPacket::OpqPacket(std::string encodedPacket)
@@ -48,6 +49,50 @@ void OpqPacket::computeChecksum()
     header.checksum = sum;
 }
 
+void OpqPacket::addPayload(uint8_t b)
+{
+    payload.push_back(b);
+    header.payloadSize++;
+}
+
+void OpqPacket::addPayload(uint32_t i)
+{
+    uint32_t converted = htobe32(i);
+    uint8_t * p = (uint8_t *) &converted;
+
+    for(int j = 0; j < sizeof(converted); j++) {
+        payload.push_back(p[j]);
+        header.payloadSize++;
+    }
+}
+
+void OpqPacket::addPayload(uint64_t l) {
+    uint64_t converted = htobe64(l);
+    uint8_t * p = (uint8_t *) &converted;
+
+    for(int j = 0; j < sizeof(converted); j++) {
+        payload.push_back(p[j]);
+        header.payloadSize++;
+    }
+}
+
+void OpqPacket::addPayload(double d)
+{
+    uint32_t * p = (uint32_t *) &d;
+    addPayload((uint32_t) p[1]);
+    addPayload((uint32_t) p[0]);
+}
+
+void OpqPacket::addPayload(std::string s)
+{
+    uint8_t * p = (uint8_t *) s.c_str();
+    for(int i = 0; i < s.length(); i++)
+    {
+        payload.push_back(p[i]);
+        header.payloadSize++;
+    }
+}
+
 
 std::string OpqPacket::encodeOpqPacket()
 {
@@ -69,6 +114,7 @@ OpqPacket::OpqPacketHeader OpqPacket::headerToByteOrder()
     converted.deviceId = htobe64(header.deviceId);
     converted.timestamp = htobe64(header.timestamp);
     converted.bitfield = htobe32(header.bitfield);
+    converted.payloadSize = htobe32(header.payloadSize);
     converted.checksum = htobe32(header.checksum);
     return converted;
 }
