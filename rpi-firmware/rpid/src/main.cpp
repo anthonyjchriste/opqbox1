@@ -53,28 +53,20 @@ int main(int argc, char** argv)
     OpqSettings *set = OpqSettings::Instance();
     set->loadFromFile(std::string("settings.set"));
 
-    struct OpqPacketHeader packetHeader;
-    packetHeader.magic = htobe64(0x00C0FFEE);
-    packetHeader.type = htobe32(OpqPacketType::PING);
-    packetHeader.sequenceNumber = htobe32(0);
-    packetHeader.deviceId = htobe64(12345);
-    packetHeader.timestamp = htobe64(1399677769438L);
-    packetHeader.bitfield = htobe32(0);
-    for(int i = 0; i < 4; i++) packetHeader.reserved[i] = 0;
-    packetHeader.checksum = 0;
-
-    std::vector<uint8_t> payload;
-    payload.push_back(1);
-
-    packetHeader.payloadSize = payload.size();
-
-    OpqPacket opqPacket = std::make_pair(packetHeader, payload);
-    opqPacket.first.checksum = computeChecksum(opqPacket);
-
-    printHeader(opqPacket.first);
+    OpqPacket opqPacket;
+    opqPacket.header.magic = 0x00C0FFEE;
+    opqPacket.header.type = OpqPacketType::PING;
+    opqPacket.header.sequenceNumber = 0;
+    opqPacket.header.deviceId = 12345;
+    opqPacket.header.timestamp = 1399683477070L;
+    opqPacket.header.bitfield = 0;
+    opqPacket.header.payloadSize = 1;
+    opqPacket.payload.push_back(1);
+    opqPacket.computeChecksum();
+    opqPacket.debugInfo();
 
     OpqWebsocket opqWebsocket;
-    opqWebsocket.messages.push(encodeOpqPacket(opqPacket));
+    opqWebsocket.messages.push(opqPacket.encodeOpqPacket());
     opqWebsocket.listen();
 
 

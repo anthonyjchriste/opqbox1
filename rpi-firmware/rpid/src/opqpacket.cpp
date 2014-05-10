@@ -1,50 +1,24 @@
-#include "opqpacket.hpp"
-#include <cstring>
-#include <vector>
-#include <cstdint>
-#include <iostream>
 #include "base64.hpp"
+#include "opqpacket.hpp"
 
-
+#include <cstdint>
+#include <cstring>
+#include <iostream>
+#include <endian.h>
 #include <string>
+#include <vector>
 
-uint32_t computeChecksum(OpqPacket opqPacket)
+OpqPacket::OpqPacket()
 {
-    uint32_t sum = 0;
-    uint8_t * p = (unsigned char *) &opqPacket.first;
-
-    for(int i = 0; i < sizeof(OpqPacketHeader); i++) {
-        sum += p[i];
-    }
-
-    for(int i = 0; i < opqPacket.second.size(); i++) {
-        sum += opqPacket.second[i];
-    }
-
-    return sum;
+    zeroReserved();
+    header.checksum = 0;
 }
 
-std::string base64Encode(uint8_t bytes[], int length)
+OpqPacket::OpqPacket(std::string encodedPacket)
 {
-    std::string out = base64::base64_encode(bytes,length);
-    return out;
-}
-
-std::string base64Decode(std::string encoded)
-{
-    std::string out;
-
-
-    return out;
-}
-
-OpqPacket decodeOpqPacketet(std::string encoded)
-{
-    struct OpqPacketHeader opqPacketHeader;
-    std::vector<uint8_t> payload;
-    std::string decoded = base64Decode(encoded);
+    std::string decoded = base64::base64_decode(encodedPacket);
     const char *p = decoded.c_str();
-    std::memmove(&opqPacketHeader, p, sizeof(OpqPacketHeader));
+    std::memmove(&header, p, sizeof(OpqPacketHeader));
 
     p += sizeof(OpqPacketHeader);
     for(int i = sizeof(OpqPacketHeader); i < decoded.size(); i++) {
@@ -52,22 +26,55 @@ OpqPacket decodeOpqPacketet(std::string encoded)
         p++;
     }
 
-    return std::make_pair(opqPacketHeader, payload);
 }
 
-std::string encodeOpqPacket(OpqPacket opqPacket)
+void OpqPacket::zeroReserved()
 {
-    int length = sizeof(OpqPacketHeader) + opqPacket.second.size();
+    for(int i = 0; i < 4; i++) header.reserved[i] = 0;
+}
+
+void OpqPacket::computeChecksum()
+{
+    uint32_t sum = 0;
+    uint8_t * p = (unsigned char *) &header;
+
+    for(int i = 0; i < sizeof(OpqPacketHeader); i++) {
+        sum += p[i];
+    }
+
+    for(int i = 0; i < payload.size(); i++) {
+        sum += payload[i];
+    }
+    header.checksum = sum;
+}
+
+
+std::string OpqPacket::encodeOpqPacket()
+{
+    int length = sizeof(OpqPacketHeader) + payload.size();
     uint8_t data[length];
-    std::memmove(data, &opqPacket.first, sizeof(OpqPacketHeader));
-    std::memcpy(data + sizeof(OpqPacketHeader), opqPacket.second.data(), opqPacket.second.size());
-
-
-    std::string encoded = base64Encode(data, length);
+    OpqPacketHeader networkHeader = headerToByteOrder();
+    std::memmove(data, &networkHeader, sizeof(OpqPacketHeader));
+    std::memcpy(data + sizeof(OpqPacketHeader), payload.data(), payload.size());
+    std::string encoded = base64::base64_encode(data, length);
     return encoded;
 }
 
-void printHeader(OpqPacketHeader header)
+OpqPacket::OpqPacketHeader OpqPacket::headerToByteOrder()
+{
+    OpqPacketHeader converted = header;
+    converted.magic = htobe64(header.magic);
+    converted.type = htobe32(header.type);
+    converted.sequenceNumber = htobe32(header.sequenceNumber);
+    converted.deviceId = htobe64(header.deviceId);
+    converted.timestamp = htobe64(header.timestamp);
+    converted.bitfield = htobe32(header.bitfield);
+    converted.checksum = htobe32(header.checksum);
+    return converted;
+}
+
+
+void OpqPacket::debugInfo()
 {
     std::cout << "magic: " << header.magic << "\n";
     std::cout << "type: " << header.type << "\n";
@@ -78,3 +85,5 @@ void printHeader(OpqPacketHeader header)
     std::cout << "payload size: " << header.payloadSize << "\n";
     std::cout << "checksum: " << header.checksum << "\n";
 }
+
+

@@ -6,16 +6,34 @@
 #include <utility>
 #include <vector>
 
-struct __attribute__((__packed__)) OpqPacketHeader {
-    uint32_t magic;
-    uint32_t type;
-    uint32_t sequenceNumber;
-    uint64_t deviceId;
-    uint64_t timestamp;
-    uint32_t bitfield;
-    uint32_t payloadSize;
-    uint32_t reserved[4];
-    uint32_t checksum;
+class OpqPacket
+{
+public:
+    OpqPacket();
+    OpqPacket(std::string encodedPacket);
+
+    typedef struct __attribute__((__packed__)) {
+        uint32_t magic;
+        uint32_t type;
+        uint32_t sequenceNumber;
+        uint64_t deviceId;
+        uint64_t timestamp;
+        uint32_t bitfield;
+        uint32_t payloadSize;
+        uint32_t reserved[4];
+        uint32_t checksum;
+    } OpqPacketHeader;
+
+    void debugInfo();
+    std::string encodeOpqPacket();
+    OpqPacketHeader header;
+    void computeChecksum();
+    std::vector<unsigned char> payload;
+
+
+private:
+    OpqPacketHeader headerToByteOrder();
+    void zeroReserved();
 };
 
 enum OpqPacketType {
@@ -27,15 +45,6 @@ enum OpqPacketType {
     SETTING = 5,
     MONITOR = 6
 };
-
-typedef std::pair<OpqPacketHeader, std::vector<unsigned char> > OpqPacket;
-std::string base64Encode(uint8_t bytes[], int length);
-std::string base64Decode(std::string encodes);
-OpqPacket makeOpqPacket(std::string encoded);
-std::string encodeOpqPacket(OpqPacket opqPacket);
-uint32_t computeChecksum(OpqPacket opqPacket);
-
-void printHeader(OpqPacketHeader header);
 
 #endif // OPQPACKET_HPP
 

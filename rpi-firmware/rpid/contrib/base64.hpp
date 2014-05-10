@@ -1,6 +1,8 @@
 #ifndef BASE64_H
 #define BASE64_H
 
+#include <string>
+
 namespace base64 {
 
 static std::string const base64_chars =
