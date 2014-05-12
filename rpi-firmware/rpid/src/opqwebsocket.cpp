@@ -36,11 +36,13 @@ void OpqWebsocket::send(OpqPacket packet)
 
 void OpqWebsocket::consumeQueue()
 {
-    OpqPacket packet;
     struct OpqFrame frame;
-
     while(!frames.empty())
     {
+        OpqPacket packet;
+        frame = frames.front();
+        frames.pop();
+
         //packet.header.type =
         packet.header.sequenceNumber = 0;
         packet.header.deviceId = deviceId_;
