@@ -11,6 +11,7 @@
 OpqPacket::OpqPacket()
 {
     zeroReserved();
+    header.magic = HEADER_MAGIC;
     header.checksum = 0;
     header.payloadSize = 0;
 }

@@ -6,6 +6,8 @@
 #include <utility>
 #include <vector>
 
+#define HEADER_MAGIC 0x00C0FFEE
+
 class OpqPacket
 {
 public:

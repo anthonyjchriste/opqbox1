@@ -53,6 +53,7 @@ int main(int argc, char** argv)
 {
     OpqSettings *set = OpqSettings::Instance();
     set->loadFromFile(std::string("settings.set"));
+
     /*
     OpqPacket opqPacket;
     opqPacket.header.magic = 0x00C0FFEE;
@@ -65,12 +66,15 @@ int main(int argc, char** argv)
     opqPacket.addPayload((uint64_t) 200L);
     opqPacket.computeChecksum();
     opqPacket.debugInfo();
+    */
 
     OpqWebsocket opqWebsocket;
-    opqWebsocket.messages.push(opqPacket.encodeOpqPacket());
-    opqWebsocket.listen();
+    //opqWebsocket.messages.push(opqPacket.encodeOpqPacket());
+    //opqWebsocket.listen();
 
-    */
+
+
+    /*
     FrameQueuePointer acqQ(new FrameQueue);
     FrameQueuePointer fftQ(new FrameQueue);
     FrameQueuePointer anaQ(new FrameQueue);
@@ -89,12 +93,12 @@ int main(int argc, char** argv)
         if (index <100)
         {
             OpqFrame* frame  = anaQ->pop();
-            /*
-            for(int i = 0; i< frame->fft.size(); i++)
-                cout << frame->fft[i] << endl;
-            for(int i = 0; i< frame->fft.size(); i++)
-                cout << frame->data[i] << endl;
-            */
+
+            //for(int i = 0; i< frame->fft.size(); i++)
+            //    cout << frame->fft[i] << endl;
+            //for(int i = 0; i< frame->fft.size(); i++)
+            //    cout << frame->data[i] << endl;
+
             cout << boost::get<float>(frame->parameters["f"]) << endl;
             delete frame;
             index++;
@@ -103,5 +107,5 @@ int main(int argc, char** argv)
         {
             exit(0);
         }
-    }
+    }*/
 }
