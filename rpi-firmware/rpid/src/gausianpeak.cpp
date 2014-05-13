@@ -57,7 +57,7 @@ float gausianPeak(OpqFrame* frame)
     for(int i = 0; i < 7; i++)
     {
         peak.push_back(frame->fft[index - 3 + i]);
-        error.push_back(0.99);
+        error.push_back(1);
     }
     for(int i = 0; i < 7; i++)
     {
@@ -66,6 +66,6 @@ float gausianPeak(OpqFrame* frame)
     double C0;
     double C1;
     double C2;
-    parabolicFit(peak,error,C0,C1,C2);
-    return index -3 + C1;
+    parabolicFit(peak,error,C0, C1, C2);
+    return index - 3 - C1/(C2*2);
 }
