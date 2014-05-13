@@ -83,51 +83,6 @@ void OpqWebsocket::run()
     time_t ts;
     double timeDiff;
 
-    /*
-    auto cb = [](std::string message)
-    {
-        OpqPacket recv(message);
-        recv.debugInfo();
-
-        vector<std::string> tokens;
-        boost::split(tokens, message, boost::is_any_of(":"));
-
-        switch(recv.header.type)
-        {
-            case OpqPacketType::SETTING: {
-                OpqSetting setValue;
-
-                switch (type.at(0))
-                {
-                    case 'U':
-                        setValue = boost::lexical_cast<uint64_t>(value);
-                        break;
-                    case 'F':
-                        setValue = boost::lexical_cast<float>(value);
-                        break;
-                    case 'I':
-                        setValue = boost::lexical_cast<int>(value);
-                        break;
-                    case 'S':
-                        setValue = value;
-                        break;
-                    case 'B':
-                        if(value == "TRUE")
-                            setValue = true;
-                        else
-                            setValue = false;
-                        break;
-                    default:
-                        throw boost::bad_lexical_cast();
-                }
-
-                std::string setting = tokens[0];
-                opqSettings_->setSetting(setting, setValue);
-                break;
-            }
-        }
-    };*/
-
     try
     {
         while(true)
