@@ -32,3 +32,4 @@ lib/analysistask.hpp
 lib/analysistask.cpp
 lib/gausianpeak.hpp
 src/gausianpeak.cpp
+settings.set
