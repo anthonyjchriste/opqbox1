@@ -38,7 +38,8 @@ public:
     void addPayload(std::string s);
 
 private:
-    OpqPacketHeader headerToByteOrder();
+    OpqPacketHeader headerToNetworkByteOrder();
+    OpqPacketHeader headerFromNetworkByteOrder();
     void zeroReserved();
 };
 
