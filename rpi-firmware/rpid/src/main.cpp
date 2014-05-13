@@ -54,24 +54,11 @@ int main(int argc, char** argv)
     OpqSettings *set = OpqSettings::Instance();
     set->loadFromFile(std::string("settings.set"));
 
-    /*
-    OpqPacket opqPacket;
-    opqPacket.header.magic = 0x00C0FFEE;
-    opqPacket.header.type = OpqPacketType::EVENT_FREQUENCY;
-    opqPacket.header.sequenceNumber = 0;
-    opqPacket.header.deviceId = 12345;
-    opqPacket.header.timestamp = 1399683477070L;
-    opqPacket.header.bitfield = 0;
-    opqPacket.addPayload(65.2);
-    opqPacket.addPayload((uint64_t) 200L);
-    opqPacket.computeChecksum();
-    opqPacket.debugInfo();
-    */
+    FrameQueuePointer wsQ(new FrameQueue);
+    OpqWebsocket *ws = new OpqWebsocket(wsQ);
+    boost::thread wsT = boost::thread(&OpqWebsocket::run, ws);
 
-    OpqWebsocket opqWebsocket;
-    //opqWebsocket.messages.push(opqPacket.encodeOpqPacket());
-    //opqWebsocket.listen();
-
+    sleep(100);
 
 
     /*

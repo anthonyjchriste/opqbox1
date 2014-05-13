@@ -12,11 +12,12 @@
 class OpqWebsocket
 {
 public:
-    OpqWebsocket();
+    OpqWebsocket(FrameQueuePointer iq);
     void listen();
-    void consumeQueue();
     void send(std::string message);
     void send(OpqPacket packet);
+    void sendPingPacket();
+    void run();
     std::queue<OpqFrame> frames;
 
     ~OpqWebsocket()
@@ -31,7 +32,8 @@ private:
     std::string wsUrl_;
     uint64_t deviceId_;
     easywsclient::WebSocket::pointer ws_;
-
+    void handleFrame(OpqFrame *frame);
+    FrameQueuePointer iq_;
 };
 
 #endif // OPQWEBSOCKET_HPP
