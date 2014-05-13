@@ -53,14 +53,14 @@ int main(int argc, char** argv)
 {
     OpqSettings *set = OpqSettings::Instance();
     set->loadFromFile(std::string("settings.set"));
-/*
+
     FrameQueuePointer wsQ(new FrameQueue);
     OpqWebsocket *ws = new OpqWebsocket(wsQ);
     boost::thread wsT = boost::thread(&OpqWebsocket::run, ws);
 
     sleep(100);
 
-*/
+/*
     FrameQueuePointer acqQ(new FrameQueue);
     FrameQueuePointer fftQ(new FrameQueue);
     FrameQueuePointer anaQ(new FrameQueue);
@@ -93,5 +93,5 @@ int main(int argc, char** argv)
         {
             exit(0);
         }
-    }
+    }*/
 }

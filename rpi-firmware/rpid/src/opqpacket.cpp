@@ -27,6 +27,7 @@ OpqPacket::OpqPacket(std::string encodedPacket)
         payload.push_back(*p);
         p++;
     }
+    header = headerFromNetworkByteOrder();
 
 }
 
@@ -99,14 +100,14 @@ std::string OpqPacket::encodeOpqPacket()
 {
     int length = sizeof(OpqPacketHeader) + payload.size();
     uint8_t data[length];
-    OpqPacketHeader networkHeader = headerToByteOrder();
+    OpqPacketHeader networkHeader = headerToNetworkByteOrder();
     std::memmove(data, &networkHeader, sizeof(OpqPacketHeader));
     std::memcpy(data + sizeof(OpqPacketHeader), payload.data(), payload.size());
     std::string encoded = base64::base64_encode(data, length);
     return encoded;
 }
 
-OpqPacket::OpqPacketHeader OpqPacket::headerToByteOrder()
+OpqPacket::OpqPacketHeader OpqPacket::headerToNetworkByteOrder()
 {
     OpqPacketHeader converted = header;
     converted.magic = htobe64(header.magic);
@@ -120,17 +121,35 @@ OpqPacket::OpqPacketHeader OpqPacket::headerToByteOrder()
     return converted;
 }
 
+OpqPacket::OpqPacketHeader OpqPacket::headerFromNetworkByteOrder()
+{
+    OpqPacketHeader converted = header;
+    converted.magic = be64toh(header.magic);
+    converted.type = be32toh(header.type);
+    converted.sequenceNumber = be32toh(header.sequenceNumber);
+    converted.deviceId = be64toh(header.deviceId);
+    converted.timestamp = be64toh(header.timestamp);
+    converted.bitfield = be32toh(header.bitfield);
+    converted.payloadSize = be32toh(header.payloadSize);
+    converted.checksum = be32toh(header.checksum);
+    return converted;
+}
+
+
 
 void OpqPacket::debugInfo()
 {
-    std::cout << "magic: " << header.magic << "\n";
-    std::cout << "type: " << header.type << "\n";
-    std::cout << "seq #: " << header.sequenceNumber << "\n";
-    std::cout << "device id: " << header.deviceId << "\n";
-    std::cout << "timestamp: " << header.timestamp << "\n";
-    std::cout << "bitfield: " << header.bitfield << "\n";
-    std::cout << "payload size: " << header.payloadSize << "\n";
-    std::cout << "checksum: " << header.checksum << "\n";
+    std::cout << "magic: " << std::dec << header.magic << " " << std::hex << header.magic << "\n";
+    std::cout << "type: " << std::dec << header.type << " " << std::hex << header.type << "\n";
+    std::cout << "seq #: " << std::dec << header.sequenceNumber << " " << std::hex << header.sequenceNumber << "\n";
+    std::cout << "device id: " << std::dec << header.deviceId << " " << std::hex << header.deviceId << "\n";
+    std::cout << "timestamp: " << std::dec << header.timestamp << " " << std::hex << header.timestamp << "\n";
+    std::cout << "bitfield: " << std::dec << header.bitfield << " " << std::hex << header.bitfield << "\n";
+    std::cout << "payload size: " << std::dec << header.payloadSize << " " << std::hex << header.payloadSize << "\n";
+    std::cout << "checksum: " << std::dec << header.checksum << " " << std::hex << header.checksum << "\n";
+    std::cout << "payload: ";
+    for(int i = 0; i < header.payloadSize; i++) std::cout << std::hex << payload[i];
+    std::cout << std::endl;
 }
 
 

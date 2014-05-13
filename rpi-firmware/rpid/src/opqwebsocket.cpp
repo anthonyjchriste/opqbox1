@@ -35,7 +35,8 @@ void OpqWebsocket::run()
 
     auto cb = [](std::string message)
     {
-        printf("%s\n", message.c_str());
+        OpqPacket recv(message);
+        recv.debugInfo();
     };
 
     try
@@ -147,24 +148,5 @@ void OpqWebsocket::handleFrame(OpqFrame *frame)
 
     // To the cloud!
     send(packet);
-
 }
 
-/*
-void OpqWebsocket::listen()
-{
-    while(ws_->getReadyState() != easywsclient::WebSocket::CLOSED) {
-        // Check for messages
-        while(!messages.empty()) {
-            ws_->send(messages.front());
-            messages.pop();
-        }
-
-        ws_->poll();
-        ws_->dispatch(cb);
-
-        boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
-
-    }
-}
-*/
