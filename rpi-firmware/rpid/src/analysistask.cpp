@@ -14,7 +14,7 @@ void AnalysisTask::run()
         while(true)
         {
             OpqFrame* next = iq_->pop();
-            OpqSetting frequency = OpqSetting((float)(4000.0*gausianPeak(next)/(next->fft.size())));
+            OpqSetting frequency = OpqSetting((float)(3907.41*gausianPeak(next)/(next->fft.size())));
             next->parameters["f"] = frequency;
             oq_->push(next);
             boost::this_thread::interruption_point();

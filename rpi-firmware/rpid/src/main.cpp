@@ -51,10 +51,9 @@ void uartTest()
 
 int main(int argc, char** argv)
 {
-    /*
     OpqSettings *set = OpqSettings::Instance();
     set->loadFromFile(std::string("settings.set"));
-
+/*
     FrameQueuePointer wsQ(new FrameQueue);
     OpqWebsocket *ws = new OpqWebsocket(wsQ);
     boost::thread wsT = boost::thread(&OpqWebsocket::run, ws);
@@ -83,11 +82,11 @@ int main(int argc, char** argv)
 
             //for(int i = 0; i< frame->fft.size(); i++)
             //    cout << frame->fft[i] << endl;
-            for(int i = 0; i< frame->fft.size(); i++)
-                cout << frame->data[i] << endl;
+//            for(int i = 0; i< frame->fft.size(); i++)
+//                cout << frame->data[i] << endl;
 
-//            cout << boost::get<float>(frame->parameters["f"]) << endl;
-//            delete frame;
+            cout << boost::get<float>(frame->parameters["f"]) << endl;
+            delete frame;
             index++;
         }
         else
