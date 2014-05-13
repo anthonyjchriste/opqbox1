@@ -6,6 +6,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/thread/thread.hpp>
 #include <cstdint>
+#include <ctime>
 #include <stdio.h>
 #include <sys/time.h>
 #include <stdexcept>
@@ -16,7 +17,12 @@ OpqWebsocket::OpqWebsocket(FrameQueuePointer iq)
     wsUrl_ = boost::get<std::string>(opqSettings->getSetting("ws.url"));
     deviceId_ = boost::get<uint64_t>(opqSettings->getSetting("device.id"));
     ws_ = easywsclient::WebSocket::from_url(wsUrl_);
+    pingInterval_ = boost::get<int32_t>(opqSettings->getSetting("device.pinginterval"));
+
+
     if(ws_ == NULL) throw std::runtime_error("Websocket not connected");
+    time(&lastPing_);
+    sendPingPacket();
     iq_ = iq;
 }
 
@@ -24,6 +30,9 @@ OpqWebsocket::OpqWebsocket(FrameQueuePointer iq)
 
 void OpqWebsocket::run()
 {
+    time_t ts;
+    double timeDiff;
+
     auto cb = [](std::string message)
     {
         printf("%s\n", message.c_str());
@@ -47,6 +56,17 @@ void OpqWebsocket::run()
                 ws_->poll(10);
                 ws_->dispatch(cb);
             }
+
+            // Check if we need to send a ping
+            time(&ts);
+            timeDiff = difftime(ts, lastPing_);
+            if(timeDiff > pingInterval_)
+            {
+                sendPingPacket();
+                time(&lastPing_);
+            }
+
+            // Check if we've been interrupted
             boost::this_thread::interruption_point();
         }
     }

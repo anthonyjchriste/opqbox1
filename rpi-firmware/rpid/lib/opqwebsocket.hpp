@@ -6,6 +6,7 @@
 #include "opqpacket.hpp"
 
 #include <cstdint>
+#include <ctime>
 #include <string>
 #include <queue>
 
@@ -34,6 +35,8 @@ private:
     easywsclient::WebSocket::pointer ws_;
     void handleFrame(OpqFrame *frame);
     FrameQueuePointer iq_;
+    time_t lastPing_;
+    uint32_t pingInterval_; // In seconds
 };
 
 #endif // OPQWEBSOCKET_HPP
