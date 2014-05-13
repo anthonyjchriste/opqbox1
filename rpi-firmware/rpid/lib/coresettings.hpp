@@ -22,7 +22,6 @@ private:
     OpqSettings(OpqSettings const&);
     OpqSettings & operator=(OpqSettings const&);
     static OpqSettings* instance_;
-
     std::map <std::string, OpqSetting> settings_;
     boost::shared_mutex mutex_;
 };
