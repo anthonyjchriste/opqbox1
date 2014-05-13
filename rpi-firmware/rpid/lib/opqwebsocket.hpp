@@ -37,6 +37,8 @@ private:
     FrameQueuePointer iq_;
     time_t lastPing_;
     uint32_t pingInterval_; // In seconds
+    OpqSettings *opqSettings_;
+    void callback(std::string);
 };
 
 #endif // OPQWEBSOCKET_HPP
