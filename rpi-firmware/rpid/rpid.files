@@ -33,3 +33,5 @@ lib/analysistask.cpp
 lib/gausianpeak.hpp
 src/gausianpeak.cpp
 settings.set
+lib/filtertask.hpp
+src/filtertask.cpp
