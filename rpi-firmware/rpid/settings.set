@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+=======
+uart.port:S:/dev/ttyAMA0
+uart.block_size:I:1024
+ws.url:S:ws://128.171.10.188:9000/private/ws
+>>>>>>> 13740a7998088dd71cfa65e5474cf251581a9cd6
 device.id:U:12345
 device.pinginterval:I:10
 device.vrms.max:F:62.5
