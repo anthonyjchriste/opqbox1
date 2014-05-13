@@ -45,9 +45,6 @@ static void parabolicFit(std::vector<double> data, std::vector<double> error, do
     C1 = gsl_vector_get(c, 1);
     C2 = gsl_vector_get(c, 2);
 }
-#include <iostream>
-
-using namespace std;
 
 float gausianPeak(OpqFrame* frame)
 {
@@ -69,7 +66,6 @@ float gausianPeak(OpqFrame* frame)
     double C0;
     double C1;
     double C2;
-    parabolicFit(peak,error,C0,C1,C2);
-    cout << C0 << " " << C1 << " " << C2 << " " << index << endl;
-    return index -3 - C1/(C2*2);
+    parabolicFit(peak,error,C0, C1, C2);
+    return index - 3 - C1/(C2*2);
 }
