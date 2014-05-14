@@ -21,22 +21,22 @@ void AnalysisTask::run()
             OpqSetting frequency = OpqSetting((float)(SAMPLING_RATE*gausianPeak(next)/(next->fft.size())));
 
             next->parameters["f"] = frequency;
-            std::vector<double> data;
             int start = 0;
             int end = 0;
             for(int i = 0; i< next->data.size() -1; i++)
             {
                 if(start == 0)
                 {
-                    if(data[i]*data[i-1] < 0)
+                    if(next->data[i]*next->data[i-1] < 0)
                         start = i;
                 }
-                else if(data[i]*data[i-1] < 0)
+                else if(next->data[i]*next->data[i-1] < 0)
                         end = i;
             }
-            data.assign(end - start, 0);
-            std::copy(next->data.begin() + start, next->data.begin() + end, data.begin());
-            next->parameters["vrms"] = (float)(VOLTAGE_SCALING*rmsVoltage(data));
+            std::vector<double> dataNoEdges;
+            dataNoEdges.resize(end - start, 0);
+            std::copy(next->data.begin() + start, next->data.begin() + end, dataNoEdges.begin());
+            next->parameters["vrms"] = (float)(VOLTAGE_SCALING*rmsVoltage(dataNoEdges));
 
             next->parameters["thd"] = "TO DO";
             oq_->push(next);
