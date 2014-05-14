@@ -197,13 +197,11 @@ void OpqWebsocket::handleFrame(OpqFrame *frame)
         packet.addPayload(eventVal);
         packet.addPayload((uint64_t) 0);
 
-        std::cout << "raw data:";
         for(int i = 0; i < frame->data.size(); i++)
         {
-            std::cout << frame->data[i];
             packet.addPayload(frame->data[i]);
         }
-        std::cout << std::endl;
+
     }
 
     packet.computeChecksum();
