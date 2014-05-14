@@ -31,20 +31,25 @@ void FilterTask::run()
             {
                 next->parameters["event.type"] = EVENT_FREQUENCY;
                 oq_->push(next);
+                if(ledState)
+                    setPinValue(LED2, LOW);
+                else
+                    setPinValue(LED2, HIGH);
+                ledState = !ledState;
             }
             else if(fabs(Vexp - Vmeas) >= Vthresh)
             {
                 next->parameters["event.type"] = EVENT_VOLTAGE;
                 oq_->push(next);
+                if(ledState)
+                    setPinValue(LED2, LOW);
+                else
+                    setPinValue(LED2, HIGH);
+                ledState = !ledState;
             }
             else
                 delete next;
             boost::this_thread::interruption_point();
-            if(ledState)
-                setPinValue(LED2, LOW);
-            else
-                setPinValue(LED2, HIGH);
-            ledState = !ledState;
         }
     }
     catch(boost::thread_interrupted &e)
