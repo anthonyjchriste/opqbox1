@@ -23,11 +23,6 @@ int main(int argc, char** argv)
 {
     OpqSettings *set = OpqSettings::Instance();
     set->loadFromFile(std::string("settings.set"));
-#ifdef ANTHONY_MAIN
-
-
-    sleep(100);
-#else
     FrameQueuePointer acqQ(new FrameQueue);
     FrameQueuePointer fftQ(new FrameQueue);
     FrameQueuePointer anaQ(new FrameQueue);
@@ -45,7 +40,5 @@ int main(int argc, char** argv)
     boost::thread anaT = boost::thread(&AnalysisTask::run, ana);
     boost::thread fltrT = boost::thread(&FilterTask::run, fltr);
     boost::thread wsT = boost::thread(&OpqWebsocket::run, ws);
-    int index = 0;
     getchar();
-#endif
 }

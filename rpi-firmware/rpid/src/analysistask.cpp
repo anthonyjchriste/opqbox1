@@ -18,7 +18,7 @@ void AnalysisTask::run()
         while(true)
         {
             OpqFrame* next = iq_->pop();
-            OpqSetting frequency = OpqSetting((float)(SAMPLING_RATE*gausianPeak(next)/(next->fft.size())));
+            OpqSetting frequency = OpqSetting((double)(SAMPLING_RATE*gausianPeak(next)/(next->fft.size())));
 
             next->parameters["f"] = frequency;
             int start = 0;
@@ -41,7 +41,7 @@ void AnalysisTask::run()
             std::vector<double> dataNoEdges;
             dataNoEdges.resize(end - start, 0);
             std::copy(next->data.begin() + start, next->data.begin() + end, dataNoEdges.begin());
-            next->parameters["vrms"] = (float)(VOLTAGE_SCALING*rmsVoltage(dataNoEdges));
+            next->parameters["vrms"] = (double)(VOLTAGE_SCALING*rmsVoltage(dataNoEdges));
 
             next->parameters["thd"] = "TO DO";
             oq_->push(next);

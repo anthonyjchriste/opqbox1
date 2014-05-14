@@ -13,7 +13,7 @@ using std::string;
 using std::map;
 using std::vector;
 
-typedef boost::variant<uint64_t, float, int, string, bool> OpqSetting;
+typedef boost::variant<uint64_t, double, int, string, bool> OpqSetting;
 
 typedef map<string, OpqSetting> OpqParameters;
 

@@ -82,7 +82,7 @@ bool OpqSettings::loadFromFile(std::string filename)
                 setValue = boost::lexical_cast<uint64_t>(value);
                 break;
             case 'F':
-                setValue = boost::lexical_cast<float>(value);
+                setValue = boost::lexical_cast<double>(value);
                 break;
             case 'I':
                 setValue = boost::lexical_cast<int>(value);
@@ -128,7 +128,7 @@ bool OpqSettings::saveToFile(std::string filename)
             line +="U:" + boost::lexical_cast<std::string>(boost::get<uint64_t>(val));
             break;
         case 1: //float
-            line +="F:" + boost::lexical_cast<std::string>(boost::get<float>(val));
+            line +="F:" + boost::lexical_cast<std::string>(boost::get<double>(val));
             break;
         case 2: //int
             line +="I:" + boost::lexical_cast<std::string>(boost::get<int>(val));

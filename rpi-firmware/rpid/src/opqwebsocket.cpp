@@ -160,7 +160,7 @@ void OpqWebsocket::handleFrame(OpqFrame *frame)
 
     // Make sure that the fields we need are in the parameters
     if(parameters.find("event.type") == parameters.end()) return;
-    packetType = boost::get<uint8_t>(parameters["event.type"]);
+    packetType = boost::get<int>(parameters["event.type"]);
 
     switch(packetType)
     {
