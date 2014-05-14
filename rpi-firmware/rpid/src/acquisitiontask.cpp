@@ -49,6 +49,7 @@ void AcquisitionTask::run()
     }
     catch(boost::thread_interrupted &e)
     {
+        setPinValue(LED1, HIGH);
         return;
     }
 }

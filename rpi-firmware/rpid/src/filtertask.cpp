@@ -1,10 +1,14 @@
 #include "../lib/filtertask.hpp"
 #include "coresettings.hpp"
 #include "opqpacket.hpp"
+#include "pinctl.hpp"
 FilterTask::FilterTask(FrameQueuePointer iq, FrameQueuePointer oq)
 {
     oq_ = oq;
     iq_ = iq;
+    exportPin(LED2);
+    setPinDirection(LED2, OUT);
+    setPinValue(LED2, HIGH);
 }
 
 void FilterTask::run()
@@ -15,6 +19,7 @@ void FilterTask::run()
 
         double Fexp = boost::get<double>(set->getSetting("filter.expected.f"));
         double Vexp = boost::get<double>(set->getSetting("filter.expected.vrms"));
+        bool ledState = false;
         while(true)
         {
             OpqFrame* next = iq_->pop();
@@ -35,10 +40,16 @@ void FilterTask::run()
             else
                 delete next;
             boost::this_thread::interruption_point();
+            if(ledState)
+                setPinValue(LED2, LOW);
+            else
+                setPinValue(LED2, HIGH);
+            ledState = !ledState;
         }
     }
     catch(boost::thread_interrupted &e)
     {
+        setPinValue(LED2, HIGH);
         return;
     }
 }
