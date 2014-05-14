@@ -156,26 +156,33 @@ void OpqWebsocket::handleFrame(OpqFrame *frame)
     OpqParameters parameters = frame->parameters;
     uint32_t packetType;
     double eventVal = 0.0;
-
+    OpqPacket packet;
 
     // Make sure that the fields we need are in the parameters
-    if(parameters.find("opqPacketType") == parameters.end()) return;
-    packetType = boost::get<uint8_t>(parameters["opqPacketType"]);
+    if(parameters.find("event.type") == parameters.end()) return;
+    packetType = boost::get<uint8_t>(parameters["event.type"]);
 
     switch(packetType)
     {
         case OpqPacketType::EVENT_FREQUENCY:
             if(parameters.find("f") == parameters.end()) return;
-            eventVal = boost::get<double>(parameters["frequency"]);
+            eventVal = boost::get<double>(parameters["f"]);
             break;
         case OpqPacketType::EVENT_VOLTAGE:
             if(parameters.find("vrms") == parameters.end()) return;
-            eventVal = boost::get<double>(parameters["voltage"]);
+            eventVal = boost::get<double>(parameters["vrms"]);
             break;
+        case OpqPacketType::MEASUREMENT:
+            if(parameters.find("f") == parameters.end()) return;
+            if(parameters.find("vrms") == parameters.end()) return;
+            eventVal = boost::get<double>(parameters["f"]);
+            packet.addPayload(eventVal);
+            eventVal = boost::get<double>(parameters["vrms"]);
+            packet.addPayload(eventVal);
     }
 
     // Construct the OPQ packet
-    OpqPacket packet;
+
 
     packet.header.type = packetType;
     packet.header.sequenceNumber = 0;
