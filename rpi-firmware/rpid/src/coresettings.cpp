@@ -56,6 +56,8 @@ bool OpqSettings::loadFromFile(std::string filename)
     while (std::getline(infile, line))
     {
         vector<string> strs;
+        if(line[0] == '#')
+            continue;
         boost::split(strs,line,boost::is_any_of(":"));
         if(strs.size() < 3)
             continue;

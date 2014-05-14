@@ -5,7 +5,7 @@ lib/datastructures.hpp
 lib/opqwebsocket.hpp
 lib/powerSpectrum.hpp
 lib/powertransformtask.hpp
-lib/rmsVoltage.hpp
+lib/rmsvoltage.hpp
 lib/uartread.hpp
 contrib/easywsclient.cpp
 contrib/easywsclient.hpp
@@ -15,7 +15,7 @@ src/main.cpp
 src/opqwebsocket.cpp
 src/powerSpectrum.cpp
 src/powertransformtask.cpp
-src/rmsVoltage.cpp
+src/rmsvoltage.cpp
 src/uartread.cpp
 lib/opqpacket.hpp
 src/opqpacket.cpp

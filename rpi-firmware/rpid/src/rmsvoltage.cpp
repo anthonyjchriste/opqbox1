@@ -1,4 +1,4 @@
-#include "rmsVoltage.hpp"
+#include "rmsvoltage.hpp"
 #include <cmath>
 
 double rmsVoltage(vector<double> data)
