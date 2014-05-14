@@ -188,6 +188,10 @@ void OpqWebsocket::handleFrame(OpqFrame *frame)
     {
         packet.addPayload(eventVal);
         packet.addPayload((uint64_t) 0);
+        for(int i = 0; i < frame->data.size(); i++)
+        {
+            packet.addPayload(frame->data[i]);
+        }
     }
 
     packet.computeChecksum();
