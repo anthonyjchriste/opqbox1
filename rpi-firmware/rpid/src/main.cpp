@@ -54,7 +54,7 @@ int main(int argc, char** argv)
             //    cout << frame->fft[i] << endl;
 //            for(int i = 0; i< frame->fft.size(); i++)
 //                cout << frame->data[i] << endl;
-            cout << boost::get<float>(frame->parameters["f"]) << " " << boost::get<float>(frame->parameters["vrms"]) << endl;
+            cout << boost::get<int>(frame->parameters["event.type"]) << " "<< boost::get<float>(frame->parameters["f"]) << " " << boost::get<float>(frame->parameters["vrms"]) << endl;
             delete frame;
             index++;
         }

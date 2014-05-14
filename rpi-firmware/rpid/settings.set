@@ -4,11 +4,11 @@ uart.block_size         :I  :4096
 
 #Calibration constants
 cal.sampling_rate       :F  :3906
-cal.voltageScaling      :F  :1152.6
+cal.voltageScaling      :F  :1160.6
 
 #Power quality thresholds
 filter.thresh.f         :F  :0.1
-filter.thresh.vrms      :F  :0.1
+filter.thresh.vrms      :F  :0.12
 filter.thresh.thd       :F  :0.01
 
 filter.expected.f       :F  :60
