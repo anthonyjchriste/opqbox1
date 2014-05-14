@@ -7,12 +7,12 @@
 #include "acquisitiontask.hpp"
 #include "powertransformtask.hpp"
 #include "analysistask.hpp"
+#include "filtertask.hpp"
 #include "opqwebsocket.hpp"
 #include "opqpacket.hpp"
 
 #include <boost/thread/thread.hpp>
 #include <boost/date_time.hpp>
-
 #include <endian.h>
 
 using namespace std;
@@ -32,29 +32,29 @@ int main(int argc, char** argv)
     FrameQueuePointer acqQ(new FrameQueue);
     FrameQueuePointer fftQ(new FrameQueue);
     FrameQueuePointer anaQ(new FrameQueue);
-
+    FrameQueuePointer fltrQ(new FrameQueue);
     AcquisitionTask *acq = new AcquisitionTask(acqQ);
     PowerTransformTask *fft = new PowerTransformTask(acqQ, fftQ);
     AnalysisTask * ana = new AnalysisTask(fftQ, anaQ);
+    FilterTask * fltr = new FilterTask(anaQ, fltrQ);
 
     boost::this_thread::sleep(boost::posix_time::millisec(1000));
     boost::thread acqT = boost::thread(&AcquisitionTask::run, acq);
     boost::thread fftT = boost::thread(&PowerTransformTask::run, fft);
     boost::thread anaT = boost::thread(&AnalysisTask::run, ana);
+    boost::thread fltrT = boost::thread(&FilterTask::run, fltr);
     int index = 0;
     while(true)
     {
         if (index <100)
         {
-            OpqFrame* frame  = anaQ->pop();
+            OpqFrame* frame  = fltrQ->pop();
 
             //for(int i = 0; i< frame->fft.size(); i++)
             //    cout << frame->fft[i] << endl;
 //            for(int i = 0; i< frame->fft.size(); i++)
 //                cout << frame->data[i] << endl;
-
             cout << boost::get<float>(frame->parameters["f"]) << " " << boost::get<float>(frame->parameters["vrms"]) << endl;
-
             delete frame;
             index++;
         }

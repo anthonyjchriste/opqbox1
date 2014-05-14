@@ -32,6 +32,8 @@ void FilterTask::run()
                 next->parameters["event.type"] = EVENT_VOLTAGE;
                 oq_->push(next);
             }
+            else
+                delete next;
             boost::this_thread::interruption_point();
         }
     }
