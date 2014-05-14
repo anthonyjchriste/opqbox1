@@ -19,6 +19,9 @@ void FilterTask::run()
 
         double Fexp = boost::get<double>(set->getSetting("filter.expected.f"));
         double Vexp = boost::get<double>(set->getSetting("filter.expected.vrms"));
+        int updateF = boost::get<int>(set->getSetting("filter.measurement.f"));
+
+        int frameCounter = 0;
         while(true)
         {
             OpqFrame* next = iq_->pop();
@@ -28,20 +31,32 @@ void FilterTask::run()
             double Vmeas = boost::get<double>(next->parameters["vrms"]);
             if(fabs(Fexp - Fmeas) >= Fthresh)
             {
+                frameCounter = 0;
                 next->parameters["event.type"] = EVENT_FREQUENCY;
                 oq_->push(next);
                 setPinValue(LED2, LOW);
             }
             else if(fabs(Vexp - Vmeas) >= Vthresh)
             {
+                frameCounter = 0;
                 next->parameters["event.type"] = EVENT_VOLTAGE;
                 oq_->push(next);
                 setPinValue(LED2, LOW);
             }
             else
             {
-                setPinValue(LED2, HIGH);
-                delete next;
+                frameCounter++;
+                if(updateF > 0 && frameCounter > updateF)
+                {
+                    next->parameters["event.type"] = MEASUREMENT;
+                    setPinValue(LED2, LOW);
+                    oq_->push(next);
+                }
+                else
+                {
+                    setPinValue(LED2, HIGH);
+                    delete next;
+                }
             }
             boost::this_thread::interruption_point();
         }

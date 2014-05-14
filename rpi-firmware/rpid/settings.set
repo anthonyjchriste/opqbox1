@@ -10,9 +10,10 @@ cal.voltage_scaling      :F  :1160.6
 filter.thresh.f         :F  :0.1
 filter.thresh.vrms      :F  :0.2
 filter.thresh.thd       :F  :0.01
-
 filter.expected.f       :F  :60
 filter.expected.vrms    :F  :120
+
+filter.measurement.f    :I  :60
 
 #Device Identity and Cloud
 device.id               :U  :12345

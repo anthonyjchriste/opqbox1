@@ -6,17 +6,12 @@ COMPILE_FLAGS = -I$(shell pwd)/lib/ -I$(shell pwd)/contrib  -std=c++0x
 CPP = g++ -std=c++0x
 
 %.o: src/%.cpp
-	@$(CPP) $(COMPILE_FLAGS) -c -o $@  $<
 	@echo $@
+	@$(CPP) $(COMPILE_FLAGS) -c -o $@  $<
  
 all: $(OBJECTS) easyws.o
+	@echo Linking
 	@g++ $(OBJECTS) $(COMPILE_FLAGS) easyws.o src/main.cpp -o opqd $(LINK_FLAGS)
-	@echo Linking
-
-anthony: $(OBJECTS) easyws.o
-	@g++ $(OBJECTS) $(COMPILE_FLAGS) easyws.o src/main.cpp -o opqd $(LINK_FLAGS) -DANTHONY_MAIN
-	@echo Linking
-	
 
 easyws.o: contrib/easywsclient.cpp
 	@g++ contrib/easywsclient.cpp -c -o easyws.o
