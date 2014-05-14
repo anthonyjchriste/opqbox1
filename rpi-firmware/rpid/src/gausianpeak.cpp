@@ -50,16 +50,16 @@ float gausianPeak(OpqFrame* frame)
 {
     std::vector<double> fft = frame->fft;
 
-    int index =  distance(fft.begin(), max_element(fft.begin(), fft.begin() + fft.size()/2));
+    int index =  distance(fft.begin(), max_element(fft.begin() + 4, fft.begin() + fft.size()/2));
 
     std::vector <double> peak;
     std::vector <double> error;
-    for(int i = 0; i < 7; i++)
+    for(int i = 0; i < 9; i++)
     {
-        peak.push_back(frame->fft[index - 3 + i]);
+        peak.push_back(frame->fft[index - 4 + i]);
         error.push_back(1);
     }
-    for(int i = 0; i < 7; i++)
+    for(int i = 0; i < peak.size(); i++)
     {
         peak[i] = log(peak[i]);
     }
@@ -67,5 +67,5 @@ float gausianPeak(OpqFrame* frame)
     double C1;
     double C2;
     parabolicFit(peak,error,C0, C1, C2);
-    return index - 3 - C1/(C2*2);
+    return index - 4 - C1/(C2*2);
 }
