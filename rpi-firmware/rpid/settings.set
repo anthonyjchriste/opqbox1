@@ -1,20 +1,20 @@
 #UART config
-uart.port:S:/dev/ttyAMA0
-uart.block_size:I:4096
+uart.port               :S  :/dev/ttyAMA0
+uart.block_size         :I  :4096
 
 #Calibration constants
-cal.sampling_rate:F:3906
-cal.voltageScaling:F:240
+cal.sampling_rate       :F  :3906
+cal.voltageScaling      :F  :1152.6
 
 #Power quality thresholds
-filter.thresh.f:F0.1
-filter.thresh.vrms:F:0.01
-filter.thresh.thd:F:0.01
+filter.thresh.f         :F  :0.1
+filter.thresh.vrms      :F  :0.1
+filter.thresh.thd       :F  :0.01
 
-filter.expected.f:F:60
-filter.expected.vrms:F:0.7
+filter.expected.f       :F  :60
+filter.expected.vrms    :F  :120
 
 #Device Identity and Cloud
-device.id:U:12345
-device.pinginterval:I:10
-ws.url:S:ws://128.171.10.188:9000/private/ws
+device.id               :U  :12345
+device.pinginterval     :I  :10
+ws.url                  :S  :ws://128.171.10.188:9000/private/ws

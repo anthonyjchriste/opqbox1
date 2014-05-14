@@ -14,13 +14,14 @@ void AnalysisTask::run()
     {
         OpqSettings* set = OpqSettings::Instance();
         float SAMPLING_RATE = boost::get<float>(set->getSetting("cal.sampling_rate"));
+        float VOLTAGE_SCALING = boost::get<float>(set->getSetting("cal.voltageScaling"));
         while(true)
         {
             OpqFrame* next = iq_->pop();
             OpqSetting frequency = OpqSetting((float)(SAMPLING_RATE*gausianPeak(next)/(next->fft.size())));
 
             next->parameters["f"] = frequency;
-            next->parameters["vrms"] = (float)rmsVoltage(next->data);
+            next->parameters["vrms"] = (float)(VOLTAGE_SCALING*rmsVoltage(next->data));
             next->parameters["thd"] = "TO DO";
             oq_->push(next);
             boost::this_thread::interruption_point();
