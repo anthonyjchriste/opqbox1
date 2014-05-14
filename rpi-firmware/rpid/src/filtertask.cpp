@@ -51,6 +51,7 @@ void FilterTask::run()
                     next->parameters["event.type"] = MEASUREMENT;
                     setPinValue(LED2, LOW);
                     oq_->push(next);
+                    frameCounter = 0;
                 }
                 else
                 {
