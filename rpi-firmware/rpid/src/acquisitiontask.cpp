@@ -21,6 +21,7 @@ AcquisitionTask::AcquisitionTask(FrameQueuePointer oq) throw(std::runtime_error&
 
 AcquisitionTask::~AcquisitionTask()
 {
+    setPinValue(LED1, HIGH);
     unExportPin(FLOW_CTL_PIN);
     unExportPin(LED1);
 }

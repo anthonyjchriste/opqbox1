@@ -11,6 +11,12 @@ FilterTask::FilterTask(FrameQueuePointer iq, FrameQueuePointer oq)
     setPinValue(LED2, HIGH);
 }
 
+FilterTask::~FilterTask()
+{
+    setPinValue(LED2, HIGH);
+    unExportPin(LED2);
+}
+
 void FilterTask::run()
 {
     try

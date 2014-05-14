@@ -35,10 +35,19 @@ int main(int argc, char** argv)
     OpqWebsocket *ws = new OpqWebsocket(fltrQ);
 
     boost::this_thread::sleep(boost::posix_time::millisec(1000));
-    boost::thread acqT = boost::thread(&AcquisitionTask::run, acq);
-    boost::thread fftT = boost::thread(&PowerTransformTask::run, fft);
-    boost::thread anaT = boost::thread(&AnalysisTask::run, ana);
-    boost::thread fltrT = boost::thread(&FilterTask::run, fltr);
-    boost::thread wsT = boost::thread(&OpqWebsocket::run, ws);
+    boost::thread_group threads;
+    threads.add_thread(new boost::thread(&AcquisitionTask::run, acq));
+    threads.add_thread(new boost::thread(&PowerTransformTask::run, fft));
+    threads.add_thread(new boost::thread(&AnalysisTask::run, ana));
+    threads.add_thread(new boost::thread(&FilterTask::run, fltr));
+    threads.add_thread(new boost::thread(&OpqWebsocket::run, ws));
     getchar();
+    threads.interrupt_all();
+    threads.join_all();
+    delete acq;
+    delete fft;
+    delete ana;
+    delete fltr;
+    delete ws;
+    return 0;
 }

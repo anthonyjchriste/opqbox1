@@ -7,6 +7,7 @@ class FilterTask
 {
 public:
     FilterTask(FrameQueuePointer iq, FrameQueuePointer oq);
+    ~FilterTask();
     void run();
 private:
     FrameQueuePointer oq_;
