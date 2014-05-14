@@ -13,15 +13,15 @@ void FilterTask::run()
     {
         OpqSettings* set = OpqSettings::Instance();
 
-        float Fexp = boost::get<float>(set->getSetting("filter.expected.f"));
-        float Vexp = boost::get<float>(set->getSetting("filter.expected.vrms"));
+        double Fexp = boost::get<double>(set->getSetting("filter.expected.f"));
+        double Vexp = boost::get<double>(set->getSetting("filter.expected.vrms"));
         while(true)
         {
             OpqFrame* next = iq_->pop();
-            float Fthresh = boost::get<float>(set->getSetting("filter.thresh.f"));
-            float Vthresh = boost::get<float>(set->getSetting("filter.thresh.vrms"));
-            float Fmeas = boost::get<float>(next->parameters["f"]);
-            float Vmeas = boost::get<float>(next->parameters["vrms"]);
+            double Fthresh = boost::get<double>(set->getSetting("filter.thresh.f"));
+            double Vthresh = boost::get<double>(set->getSetting("filter.thresh.vrms"));
+            double Fmeas = boost::get<double>(next->parameters["f"]);
+            double Vmeas = boost::get<double>(next->parameters["vrms"]);
             if(fabs(Fexp - Fmeas) >= Fthresh)
             {
                 next->parameters["event.type"] = EVENT_FREQUENCY;

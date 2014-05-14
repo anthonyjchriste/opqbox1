@@ -50,7 +50,7 @@ void OpqWebsocket::callback(std::string message)
                     setValue = boost::lexical_cast<uint64_t>(value);
                     break;
                 case 'F':
-                    setValue = boost::lexical_cast<float>(value);
+                    setValue = boost::lexical_cast<double>(value);
                     break;
                 case 'I':
                     setValue = boost::lexical_cast<int>(value);
