@@ -44,7 +44,7 @@ void AnalysisTask::run()
             next->parameters["vrms"] = (double)(VOLTAGE_SCALING*rmsVoltage(dataNoEdges));
 
             next->parameters["thd"] = "TO DO";
-            for(size_t i = 0; i < next->data; i++)
+            for(size_t i = 0; i < next->data.size(); i++)
             {
                 next->data[i] *= VOLTAGE_SCALING;
             }
