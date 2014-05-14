@@ -44,6 +44,11 @@ void AnalysisTask::run()
             next->parameters["vrms"] = (double)(VOLTAGE_SCALING*rmsVoltage(dataNoEdges));
 
             next->parameters["thd"] = "TO DO";
+            for(size_t i = 0; i < next->data; i++)
+            {
+                next->data[i] *= VOLTAGE_SCALING;
+            }
+
             oq_->push(next);
             boost::this_thread::interruption_point();
         }
