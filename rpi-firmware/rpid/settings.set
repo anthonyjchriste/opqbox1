@@ -1,9 +1,9 @@
 #UART config
 uart.port:S:/dev/ttyAMA0
-uart.block_size:I:2048
+uart.block_size:I:4096
 
 #Calibration constants
-cal.sampling_rate:F:3907.41
+cal.sampling_rate:F:3906
 cal.voltageScaling:F:240
 
 #Power quality thresholds
