@@ -3,7 +3,7 @@ lib/coredataqueue.hpp
 lib/coresettings.hpp
 lib/datastructures.hpp
 lib/opqwebsocket.hpp
-lib/powerSpectrum.hpp
+lib/powerspectrum.hpp
 lib/powertransformtask.hpp
 lib/rmsvoltage.hpp
 lib/uartread.hpp
@@ -13,7 +13,7 @@ src/acquisitiontask.cpp
 src/coresettings.cpp
 src/main.cpp
 src/opqwebsocket.cpp
-src/powerSpectrum.cpp
+src/powerspectrum.cpp
 src/powertransformtask.cpp
 src/rmsvoltage.cpp
 src/uartread.cpp

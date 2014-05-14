@@ -2,7 +2,6 @@
 #include <cmath>
 #include <vector>
 
-#include "powerSpectrum.hpp"
 #include "coresettings.hpp"
 #include <string>
 #include "acquisitiontask.hpp"

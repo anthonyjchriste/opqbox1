@@ -1,4 +1,4 @@
-#include "powerSpectrum.hpp"
+#include "powerspectrum.hpp"
 //#include <gsl/gsl_errno.h>
 #include <gsl/gsl_fft_real.h>
 #include <gsl/gsl_fft_complex.h>

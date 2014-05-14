@@ -1,5 +1,5 @@
 #include "powertransformtask.hpp"
-#include "powerSpectrum.hpp"
+#include "powerspectrum.hpp"
 
 PowerTransformTask::PowerTransformTask(FrameQueuePointer iq, FrameQueuePointer oq)
 {
