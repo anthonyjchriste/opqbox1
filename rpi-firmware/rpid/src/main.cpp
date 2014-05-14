@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
+#include <stdlib.h>
 
 #include "coresettings.hpp"
 #include <string>
@@ -23,9 +24,7 @@ int main(int argc, char** argv)
     OpqSettings *set = OpqSettings::Instance();
     set->loadFromFile(std::string("settings.set"));
 #ifdef ANTHONY_MAIN
-    FrameQueuePointer wsQ(new FrameQueue);
-    OpqWebsocket *ws = new OpqWebsocket(wsQ);
-    boost::thread wsT = boost::thread(&OpqWebsocket::run, ws);
+
 
     sleep(100);
 #else
@@ -33,35 +32,20 @@ int main(int argc, char** argv)
     FrameQueuePointer fftQ(new FrameQueue);
     FrameQueuePointer anaQ(new FrameQueue);
     FrameQueuePointer fltrQ(new FrameQueue);
+
     AcquisitionTask *acq = new AcquisitionTask(acqQ);
     PowerTransformTask *fft = new PowerTransformTask(acqQ, fftQ);
     AnalysisTask * ana = new AnalysisTask(fftQ, anaQ);
     FilterTask * fltr = new FilterTask(anaQ, fltrQ);
+    OpqWebsocket *ws = new OpqWebsocket(fltrQ);
 
     boost::this_thread::sleep(boost::posix_time::millisec(1000));
     boost::thread acqT = boost::thread(&AcquisitionTask::run, acq);
     boost::thread fftT = boost::thread(&PowerTransformTask::run, fft);
     boost::thread anaT = boost::thread(&AnalysisTask::run, ana);
     boost::thread fltrT = boost::thread(&FilterTask::run, fltr);
+    boost::thread wsT = boost::thread(&OpqWebsocket::run, ws);
     int index = 0;
-    while(true)
-    {
-        if (index <100)
-        {
-            OpqFrame* frame  = fltrQ->pop();
-
-            //for(int i = 0; i< frame->fft.size(); i++)
-            //    cout << frame->fft[i] << endl;
-//            for(int i = 0; i< frame->fft.size(); i++)
-//                cout << frame->data[i] << endl;
-            cout << boost::get<int>(frame->parameters["event.type"]) << " "<< boost::get<float>(frame->parameters["f"]) << " " << boost::get<float>(frame->parameters["vrms"]) << endl;
-            delete frame;
-            index++;
-        }
-        else
-        {
-            exit(0);
-        }
-    }
+    getchar();
 #endif
 }

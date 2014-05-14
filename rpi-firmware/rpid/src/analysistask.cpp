@@ -14,7 +14,7 @@ void AnalysisTask::run()
     {
         OpqSettings* set = OpqSettings::Instance();
         float SAMPLING_RATE = boost::get<float>(set->getSetting("cal.sampling_rate"));
-        float VOLTAGE_SCALING = boost::get<float>(set->getSetting("cal.voltageScaling"));
+        float VOLTAGE_SCALING = boost::get<float>(set->getSetting("cal.voltage_scaling"));
         while(true)
         {
             OpqFrame* next = iq_->pop();
