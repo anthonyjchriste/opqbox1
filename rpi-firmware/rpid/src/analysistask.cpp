@@ -23,6 +23,7 @@ void AnalysisTask::run()
             next->parameters["f"] = frequency;
             int start = 0;
             int end = 0;
+            bool even = false;
             for(int i = 0; i< next->data.size() -1; i++)
             {
                 if(start == 0)
@@ -31,7 +32,11 @@ void AnalysisTask::run()
                         start = i;
                 }
                 else if(next->data[i]*next->data[i-1] < 0)
+                {
+                    if(even)
                         end = i;
+                    even = !even;
+                }
             }
             std::vector<double> dataNoEdges;
             dataNoEdges.resize(end - start, 0);
