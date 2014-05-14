@@ -10,6 +10,10 @@
 #define LOW "0"
 #define HIGH "1"
 
+#define LED1 "22"
+#define LED2 "27"
+#define FLOW_CTL_PIN "18"
+
 void writeToFile(std::string value, std::string path);
 std::string readValueFromFile(std::string path);
 void exportPin(std::string pin);
