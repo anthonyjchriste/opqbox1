@@ -41,9 +41,9 @@ void AcquisitionTask::run()
             oq_->push(next);
             boost::this_thread::interruption_point();
             if(ledState)
-                setPinValue(FLOW_CTL_PIN, LOW);
+                setPinValue(LED1, LOW);
             else
-                setPinValue(FLOW_CTL_PIN, HIGH);
+                setPinValue(LED1, HIGH);
             ledState = !ledState;
         }
     }
