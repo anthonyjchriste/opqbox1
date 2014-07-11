@@ -22,7 +22,16 @@ using namespace std;
 int main(int argc, char** argv)
 {
     OpqSettings *set = OpqSettings::Instance();
-    set->loadFromFile(std::string("settings.set"));
+    char *settingsFile = getenv ("OPQD_SETTINGS_FILE");
+    if(settingsFile == NULL)
+    {
+        set->loadFromFile(std::string("settings.set"));
+    }
+    else
+    {
+        set->loadFromFile(std::string(settingsFile));
+        cout << "Reading settings from " << settingsFile << endl;
+    }
     FrameQueuePointer acqQ(new FrameQueue);
     FrameQueuePointer fftQ(new FrameQueue);
     FrameQueuePointer anaQ(new FrameQueue);

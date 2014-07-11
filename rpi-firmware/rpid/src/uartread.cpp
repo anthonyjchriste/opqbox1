@@ -95,7 +95,6 @@ OpqFrame* uartRead(Msp430Uart& uart, size_t len)
         }
         index++;
     }
-    ret->size = len;
     return ret;
 }
 

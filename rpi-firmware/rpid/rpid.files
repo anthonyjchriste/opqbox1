@@ -35,3 +35,5 @@ src/gausianpeak.cpp
 settings.set
 lib/filtertask.hpp
 src/filtertask.cpp
+settings.set
+opqd.sh
