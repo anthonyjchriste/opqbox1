@@ -1,2 +1,0 @@
-/home/tusk/svn/opq-hardware/firmware/linux/libelelo/CMakeFiles/elelo.dir
-/home/tusk/svn/opq-hardware/firmware/linux/libelelo/CMakeFiles/elelo-bin.dir
