@@ -9,7 +9,6 @@
 ### END INIT INFO
 
 SCRIPT=/usr/local/bin/opqd
-PIDFILE=/var/run/opqd.pid
 LOGFILE=/var/log/opqd.log
 
 PINCTL=/usr/local/bin/pinctl
@@ -19,29 +18,21 @@ MSP_PORT=/dev/ttyAMA0
 MSP_SPEED=115200
 
 start() {
-  if [ -f /var/run/$PIDNAME ] && kill -0 $(cat /var/run/$PIDNAME); then
-    echo 'Service already running' >&2
-    return 1
-  fi
   echo 'Configuring serial port' >&2
-  stty -F $MSP_PORT ispeed $MSP_SPEED ospeed $MSP_SPEED 
+  stty -F $MSP_PORT cs8 $MSP_SPEED ignbrk -brkint -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echoke noflsh -ixon -crtscts
+
   echo 'Reseting flow control' >&2
   $PINCTL  export 18
   $PINCTL  out 18
-  $PINCTL  low 18
+  $PINCTL  high 18
   echo "Starting opqd with the data folder $OPQD_SETTINGS_FILE" >&2
-  local CMD="$SCRIPT & &> \"$LOGFILE\" & echo \$!"
-  $CMD > "$PIDFILE"
+  $SCRIPT > $LOGFILE &
   echo 'Service started' >&2
 }
 
 stop() {
-  if [ ! -f "$PIDFILE" ] || ! kill -0 $(cat "$PIDFILE"); then
-    echo 'Service not running' >&2
-    return 1
-  fi
   echo 'Stopping service…' >&2
-  kill -15 $(cat "$PIDFILE") && rm -f "$PIDFILE"
+  killall opqd
   echo 'Service stopped' >&2
 }
 
