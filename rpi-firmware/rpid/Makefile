@@ -20,10 +20,11 @@ easyws.o: contrib/easywsclient.cpp
 clean:
 	@rm -rf opqd $(OBJECTS) easyws.o
 
-install: all
+install: 
 	mkdir -p /usr/local/opqd
 	cp settings.set /usr/local/opqd
-	cp opqd.sh /ect/init.d/opqd
-	chmod 755 opqd
-	update-rc opqd defaults
+	cp opqd.sh /etc/init.d/opqd
+	chmod 755 /etc/init.d/opqd
+	chmod +x /etc/init.d/opqd
+	update-rc.d opqd defaults
 	cp opqd /usr/local/bin

@@ -13,6 +13,8 @@ RUNAS=pi
 PIDFILE=/var/run/opqd.pid
 LOGFILE=/var/log/opqd.log
 
+PINCTL=/usr/local/bin/pinctl
+
 export OPQD_SETTINGS_FILE=/usr/local/opqd/settings.set
 MSP_PORT=/dev/ttyAMA0
 MSP_SPEED=115200
@@ -22,12 +24,12 @@ start() {
     echo 'Service already running' >&2
     return 1
   fi
+  echo 'Reseting flow control' >&2
+  $PINCTL  export 18
+  $PINCTL  out 18
+  $PINCTL  low 18
   echo 'Configuring serial port' >&2
   stty -F $MSP_PORT ispeed $MSP_SPEED ospeed $MSP_SPEED raw
-  echo 'Reseting flow control' >&2
-  pinctl  export 18
-  pinctl out 18
-  pinctl high 18
   echo "Starting opqd with the data folder $OPQD_SETTINGS_FILE" >&2
   local CMD="$SCRIPT &> \"$LOGFILE\" & echo \$!"
   su -c "$CMD" $RUNAS > "$PIDFILE"
