@@ -50,7 +50,6 @@ int main(int argc, char** argv)
     threads.add_thread(new boost::thread(&AnalysisTask::run, ana));
     threads.add_thread(new boost::thread(&FilterTask::run, fltr));
     threads.add_thread(new boost::thread(&OpqWebsocket::run, ws));
-    threads.interrupt_all();
     threads.join_all();
     delete acq;
     delete fft;

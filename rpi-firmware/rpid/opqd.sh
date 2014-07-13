@@ -23,12 +23,12 @@ start() {
     echo 'Service already running' >&2
     return 1
   fi
+  echo 'Configuring serial port' >&2
+  stty -F $MSP_PORT ispeed $MSP_SPEED ospeed $MSP_SPEED 
   echo 'Reseting flow control' >&2
   $PINCTL  export 18
   $PINCTL  out 18
   $PINCTL  low 18
-  echo 'Configuring serial port' >&2
-  stty -F $MSP_PORT ispeed $MSP_SPEED ospeed $MSP_SPEED raw
   echo "Starting opqd with the data folder $OPQD_SETTINGS_FILE" >&2
   local CMD="$SCRIPT & &> \"$LOGFILE\" & echo \$!"
   $CMD > "$PIDFILE"
