@@ -9,11 +9,11 @@
 ### END INIT INFO
 
 start(){
-  echo "Starting usbd..."
+  echo "Starting usbd..." >> /home/pi/devmon.log
   wifi_root="/home/pi/opq-hardware/rpi-firmware/rpid/wifi-config"
   wifi_config="sudo python $wifi_root/wifi-config.py"
   log="$wifi_root/wifi-config.log"
-  devmon --exec-on-drive "$wifi_config %d >> $log && cp -f $log %d/." &
+  /usr/local/bin/devmon --exec-on-drive "$wifi_config %d >> $log && cp -f $log %d/." >> /home/pi/devmon.log
   echo "usbd started."
 }
 
