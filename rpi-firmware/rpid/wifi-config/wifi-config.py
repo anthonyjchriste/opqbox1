@@ -3,6 +3,7 @@
 from ConfigParser import SafeConfigParser
 import datetime
 import os.path
+from subprocess import call
 import sys
 
 date = str(datetime.datetime.now())
@@ -52,13 +53,13 @@ def get_wpa_template(configuration):
 
     if security == "wep":
         print "Using wep template..."
-        f = open("/home/pi/opq-hardware/wifi-config/wpa_supplicant.wep.conf.template", "r")
+        f = open("/home/pi/opq-hardware/rpi-firmware/rpid/wifi-config/wpa_supplicant.wep.conf.template", "r")
         t = f.read()
         f.close()
         return t
     else:
         print "Using wpa template..."
-        f = open("/home/pi/opq-hardware/wifi-config/wpa_supplicant.wpa.conf.template", "r")
+        f = open("/home/pi/opq-hardware/rpi-firmware/rpid/wifi-config/wpa_supplicant.wpa.conf.template", "r")
         t = f.read()
         f.close()
         return t
@@ -68,6 +69,16 @@ def make_wpa_supplicant(configuration, template):
     t = t.replace("_KEY_", configuration["key"])
     return t
 
+def write_supplicant(supplicant, path):
+    f = open(path, "w")
+    f.write(supplicant)
+    f.close()
+
+def restart_networking():
+    call(["sudo", "ifdown", "wlan0"])
+    call(["sudo", "ifup", "wlan0"])
+    call(["sudo", "dhclient", "wlan0"])
+
 # Check for configuration file
 if os.path.exists(config_path):
     print "Configuration file " + config_path + " found!"
@@ -76,7 +87,21 @@ if os.path.exists(config_path):
     print "Parsed configuration = " + str(configuration)
     template = get_wpa_template(configuration)
     wpa_supplicant = make_wpa_supplicant(configuration, template)
+    
+    print "Generated wpa_supplicant.conf..."
+    print
     print wpa_supplicant
+    print
+
+    print "Copying wpa_supplicant.conf to device..."
+    write_supplicant(wpa_supplicant, "/etc/wpa_supplicant/wpa_supplicant.conf")
+    
+    print "Attempting to restart networking..."
+    restart_networking()
+
+    print "Results of ifconfig"
+    call("ifconfig")
+
 else:
     print "ERROR: " + config_path + " not found!"
     print

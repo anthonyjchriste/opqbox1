@@ -26,6 +26,7 @@ start() {
   $PINCTL  out 18
   $PINCTL  high 18
   echo "Starting opqd with the data folder $OPQD_SETTINGS_FILE" >&2
+  sleep 15s # Try to make sure the network is up before running program
   $SCRIPT > $LOGFILE &
   echo 'Service started' >&2
 }

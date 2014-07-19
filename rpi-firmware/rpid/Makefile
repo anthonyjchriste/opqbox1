@@ -23,8 +23,15 @@ clean:
 install: 
 	mkdir -p /usr/local/opqd
 	cp settings.set /usr/local/opqd
+
 	cp opqd.sh /etc/init.d/opqd
 	chmod 755 /etc/init.d/opqd
 	chmod +x /etc/init.d/opqd
 	update-rc.d opqd defaults
+
+	cp usbd.sh /etc/init.d/usbd
+	chmod 755 /etc/init.d/usbd
+	chmod +x /etc/init.d/usbd
+	update-rc.d usbd defaults
+
 	cp opqd /usr/local/bin
