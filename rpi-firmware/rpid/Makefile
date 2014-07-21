@@ -33,5 +33,8 @@ install:
 	chmod 755 /etc/init.d/usbd
 	chmod +x /etc/init.d/usbd
 	update-rc.d usbd defaults
-
+		
 	cp opqd /usr/local/bin
+
+	cp contrib/devmon /usr/local/bin
+	chmod ugo+rx /usr/local/bin/devmon
