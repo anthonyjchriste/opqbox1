@@ -10,24 +10,39 @@ date = str(datetime.datetime.now())
 print "===== config.py " + date + " ====="
 print
 
-if len(sys.argv) != 2:
-    print "USB root directory not supplied"
-    print
-    exit()
+# File names
+config_ini = "config.ini"
+custom_wpa_supplicant = "wpa_supplicant.conf"
+interfaces_template = "interfaces.template"
+wpa_template = "wpa_supplicant.wpa.conf.template"
+wep_template = "wpa_supplicant.wep.conf.template"
 
-usb_root = sys.argv[1]
-config = "config.ini"
-custom_config = "wpa_supplicant.conf"
+# Paths
+usb_path = "/media/usb"
 settings_path = "/usr/local/opqd/settings.set"
-config_path = os.path.join(usb_root, wifi_config)
-custom_path = os.path.join(usb_root, custom_config)
+config_ini_path = os.path.join(usb_path, config_ini)
+custom_wpa_supplicant_path = os.path.join(usb_path, custom_wpa_supplicant)
+templates_path = "/home/pi/opq-hardware/rpi-firmware/rpid/config/templates"
+wpa_template_path = os.path.join(templates_path, wpa_template)
+wep_template_path = os.path.join(templates_path, wep_template)
+wpa_supplicant_path = "/etc/wpa_supplicant/wpa_supplicant.conf"
 
 # Display all parameters for debugging/sanity checks
-print "usb_root = " + usb_root
-print "config = " + config
-print "custom_config = " + custom_config
-print "config_path = " + config_path
-print "custom_path = " + custom_path
+print "-- Files --"
+print "config_ini = " + config_ini
+print "custom_wpa_supplicant = " + custom_wpa_supplicant
+print "interfaces_template = " + interfaces_template
+print "wpa_template = " + wpa_template
+print "wep_template = " + wep_template
+print
+print "-- Paths --"
+print "usb_path = " + usb_path + " -- (exists " + str(os.path.exists(usb_path)) + ")"
+print "settings_path = " + settings_path + " -- (exists " + str(os.path.exists(settings_path)) + ")"
+print "config_ini_path = " + config_ini_path + " -- (exists " + str(os.path.exists(config_ini_path)) + ")"
+print "custom_wpa_supplicant_path = " + custom_wpa_supplicant_path + " -- (exists " + str(os.path.exists(custom_wpa_supplicant_path)) + ")"
+print "templates_path = " + templates_path + " -- (exists " + str(os.path.exists(templates_path)) + ")"
+print "wpa_template_path = " + wpa_template_path + " -- (exists " + str(os.path.exists(wpa_template_path)) + ")"
+print "wep_template_path = " + wep_template_path + " -- (exists " + str(os.path.exists(wep_template_path)) + ")"
 print
 
 def parse_config(path):
@@ -54,7 +69,7 @@ def parse_config(path):
 
 def update_settings(device_settings, settings_file):
     # Read in the current settings file
-    f = open(settingsFile, "r")
+    f = open(settings_file, "r")
     lines = f.readlines()
     f.close()
     
@@ -64,14 +79,14 @@ def update_settings(device_settings, settings_file):
     # Replace fields given in config
     for line in lines:
         if line.startswith("device.key"):
-            results.append("device.key              :S  :" + deviceSettings["access_key"] + "\n")
+            results.append("device.key              :S  :" + device_settings["access_key"] + "\n")
         elif line.startswith("ws.url"):
-            results.append("ws.url                  :S  :" + deviceSettings["opqhub_addr"] + "\n")
+            results.append("ws.url                  :S  :" + device_settings["opqhub_addr"] + "\n")
         else:
             results.append(line)
             
     # Write out the result
-    f = open(settingsFile, "w")
+    f = open(settings_file, "w")
     for line in results:
         f.write(line)
     f.close()
@@ -85,13 +100,13 @@ def get_wpa_template(configuration):
 
     if security == "wep":
         print "Using wep template..."
-        f = open("/home/pi/opq-hardware/rpi-firmware/rpid/wifi-config/wpa_supplicant.wep.conf.template", "r")
+        f = open(wep_template_path, "r")
         t = f.read()
         f.close()
         return t
     else:
         print "Using wpa template..."
-        f = open("/home/pi/opq-hardware/rpi-firmware/rpid/wifi-config/wpa_supplicant.wpa.conf.template", "r")
+        f = open(wpa_template_path, "r")
         t = f.read()
         f.close()
         return t
@@ -112,24 +127,27 @@ def restart_networking():
     call(["sudo", "dhclient", "wlan0"])
 
 # Check for configuration file
-if os.path.exists(config_path):
+if os.path.exists(config_ini_path):
     # Read in configuration
-    print "Configuration file " + config_path + " found!"
-    print "Generating wpa_supplicant..."
-    wifi_config, device_config = parse_config(config_path)
+    print "Configuration file " + config_ini_path + " found!"
+    wifi_config, device_config = parse_config(config_ini_path)
+    print
     
     # Print out the configurations for sanity
     print "Parsed wifi_configuration = " + str(wifi_config)
     print "Parsed device_configuration = " + str(device_config)
-    
+    print    
+
     # Update settings.set
     print "Updating /usr/local/opqd/settings.set..."
-    update_settings(device_configuration, settings_path)
-    
+    update_settings(device_config, settings_path)
+    print    
+
     # Update wifi-configuration
+    print "Generating wpa_supplicant..."
     template = get_wpa_template(wifi_config)
-    wpa_supplicant = make_wpa_supplicant(wifi_config, template)
-    
+    wpa_supplicant = make_wpa_supplicant(wifi_config, template)    
+
     print "Generated wpa_supplicant.conf..."
     print
     print wpa_supplicant
@@ -140,6 +158,7 @@ if os.path.exists(config_path):
     
     print "Attempting to restart networking..."
     restart_networking()
+    print
 
     print "Results of ifconfig"
     ifconfig = Popen("ifconfig", stdout=PIPE)
@@ -153,13 +172,13 @@ else:
 # Note: If wpa_supplicant.conf is found on usb, it will always be used
 # even if wifi-config.txt is specified.
 
-if os.path.exists(custom_path):
-    print "Custom configuration " + custom_path + " found!"
-    print "Copying " + custom_path + " to device."
+if os.path.exists(custom_wpa_supplicant_path):
+    print "Custom configuration " + custom_wpa_supplicant_path + " found!"
+    print "Copying " + custom_wpa_supplicant_path + " to device."
     print
-    f = open(custom_path, "r")
+    f = open(custom_wpa_supplicant_path, "r")
     supplicant = f.read()
     f.close()
     
-    write_supplicant(supplicant, "/etc/wpa_supplicant/wpa_supplicant.conf")
+    write_supplicant(supplicant, wpa_supplicant_path)
 
