@@ -16,6 +16,7 @@ filter.expected.vrms    :F  :120
 filter.measurement.f    :I  :60
 
 #Device Identity and Cloud
-device.id               :U  :35
+device.id               :U  :2
 device.pinginterval     :I  :10
+device.key		:S  :default
 ws.url                  :S  :ws://128.171.10.188:9000/private/ws
