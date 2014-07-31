@@ -35,9 +35,12 @@ private:
     std::string deviceKey_;
     easywsclient::WebSocket::pointer ws_;
     void handleFrame(OpqFrame *frame);
+    void constructAndSend(OpqFrame *frame);
     FrameQueuePointer iq_;
     time_t lastPing_;
+    time_t lastEvent_;
     uint32_t pingInterval_; // In seconds
+    uint32_t throttle_; // In seconds
     OpqSettings *opqSettings_;
     void callback(std::string);
 };

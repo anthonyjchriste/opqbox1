@@ -94,7 +94,8 @@ def parse_config(path):
     config_fields = {"wifi_config": ["ssid", "key", "security"],
               "device_config": ["access_key", "opqhub_addr", "event_throttle",
                                 "expected_voltage", "voltage_tolerance",
-                                "expected_frequency", "frequency_tolerance"]}
+                                "expected_frequency", "frequency_tolerance",
+                                "heartbeat_interval"]}
               
     wifi_results = {}
     device_results = {}
@@ -135,7 +136,9 @@ def update_settings(device_settings, settings_file):
         elif line.startswith("filter.expected.vrms"):
             results.append("filter.expected.vrms    :F  :" + device_settings["expected_voltage"] + "\n")
         elif line.startswith("filter.expected.vrms"):
-            results.append("device.throttle         :I  :" + device_settings["event_throttle"] + "\n")         
+            results.append("device.throttle         :I  :" + device_settings["event_throttle"] + "\n")  
+        elif line.startswith("device.pinginterval"):
+            results.append("device.pinginterval     :I  :" + device_settings["heartbeat_interval"] + "\n") 
         else:
             results.append(line)
             

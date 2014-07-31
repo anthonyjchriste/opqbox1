@@ -17,7 +17,7 @@ filter.measurement.f    :I  :60
 
 #Device Identity and Cloud
 device.id               :U  :2
-device.pinginterval     :I  :10
+device.pinginterval     :I  :600
 device.key              :S  :test2
 device.throttle         :I  :60
 ws.url                  :S  :ws://128.171.10.188:9000/private/ws
