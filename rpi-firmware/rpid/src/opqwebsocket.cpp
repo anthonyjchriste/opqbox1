@@ -2,6 +2,7 @@
 #include "datastructures.hpp"
 #include "opqpacket.hpp"
 #include "opqwebsocket.hpp"
+#include "opqjson.h"
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/algorithm/string.hpp>
@@ -11,6 +12,7 @@
 #include <stdio.h>
 #include <sys/time.h>
 #include <stdexcept>
+#include <vector>
 
 OpqWebsocket::OpqWebsocket(FrameQueuePointer iq)
 {
@@ -18,11 +20,13 @@ OpqWebsocket::OpqWebsocket(FrameQueuePointer iq)
     wsUrl_ = boost::get<std::string>(opqSettings_->getSetting("ws.url"));
     deviceId_ = boost::get<uint64_t>(opqSettings_->getSetting("device.id"));
     ws_ = easywsclient::WebSocket::from_url(wsUrl_);
+    deviceKey_ = boost::get<std::string>(opqSettings_->getSetting("device.key"));
     pingInterval_ = boost::get<int32_t>(opqSettings_->getSetting("device.pinginterval"));
 
+
     if(ws_ == NULL) throw std::runtime_error("Websocket not connected");
-    time(&lastPing_);
-    sendPingPacket();
+    //time(&lastPing_);
+    //sendPingPacket();
     iq_ = iq;
 }
 
@@ -105,6 +109,7 @@ void OpqWebsocket::run()
             }
 
             // Check if we need to send a ping
+            /*
             time(&ts);
             timeDiff = difftime(ts, lastPing_);
             if(timeDiff > pingInterval_)
@@ -112,6 +117,7 @@ void OpqWebsocket::run()
                 sendPingPacket();
                 time(&lastPing_);
             }
+            */
 
             // Check if we've been interrupted
             boost::this_thread::interruption_point();
@@ -130,6 +136,7 @@ void OpqWebsocket::send(std::string message)
         ws_->send(message);
     }
 }
+
 
 void OpqWebsocket::sendPingPacket()
 {
@@ -153,7 +160,33 @@ void OpqWebsocket::send(OpqPacket packet)
 
 void OpqWebsocket::handleFrame(OpqFrame *frame)
 {
-    OpqParameters parameters = frame->parameters;
+   std::cout << "Got frame!" << "\n";
+
+   OpqParameters parameters = frame->parameters;
+   double frequency = (parameters.find("f") == parameters.end()) ? 0.0 : boost::get<double>(parameters["f"]);
+   double voltage = (parameters.find("vrms") == parameters.end()) ? 0.0 : boost::get<double>(parameters["vrms"]);
+
+   struct timeval tv;
+   gettimeofday(&tv, NULL);
+   uint64_t timestamp = (uint64_t) tv.tv_sec * 1000 + (uint64_t) tv.tv_usec / 1000;
+   uint32_t packetType = boost::get<int>(parameters["event.type"]);
+   std::cout << packetType << "\n";
+   std::vector<double> payload;
+   for(int i = 0; i < frame->data.size(); i++) {
+      payload.push_back(frame->data[i]);
+   }
+
+   uint32_t payloadSize = (uint32_t) payload.size();
+
+   char * json;
+
+   jsonify(&json, (uint32_t) 0x00C0FFEE, packetType, deviceId_, deviceKey_, timestamp,
+           (uint64_t) 0, (uint32_t) 0, frequency, voltage, (uint32_t) payload.size(), payload);
+
+   std::cout << json << "\n";
+   send(std::string(json));
+   free(json);
+    /*
     uint32_t packetType;
     double eventVal = 0.0;
     OpqPacket packet;
@@ -208,5 +241,6 @@ void OpqWebsocket::handleFrame(OpqFrame *frame)
 
     // To the cloud!
     send(packet);
+    */
 }
 
