@@ -32,6 +32,7 @@ public:
 private:
     std::string wsUrl_;
     uint64_t deviceId_;
+    std::string deviceKey_;
     easywsclient::WebSocket::pointer ws_;
     void handleFrame(OpqFrame *frame);
     FrameQueuePointer iq_;

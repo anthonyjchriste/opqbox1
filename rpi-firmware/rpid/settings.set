@@ -18,5 +18,5 @@ filter.measurement.f    :I  :60
 #Device Identity and Cloud
 device.id               :U  :2
 device.pinginterval     :I  :10
-device.key		:S  :default
+device.key		:S  :test2
 ws.url                  :S  :ws://128.171.10.188:9000/private/ws
