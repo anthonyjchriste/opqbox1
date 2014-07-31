@@ -2,6 +2,7 @@
 
 from ConfigParser import SafeConfigParser
 import datetime
+import os
 import os.path
 from subprocess import call, Popen, PIPE
 import sys
@@ -10,40 +11,81 @@ date = str(datetime.datetime.now())
 print "===== config.py " + date + " ====="
 print
 
-# File names
+# ---------- Files ----------
+# USB Files
 config_ini = "config.ini"
 custom_wpa_supplicant = "wpa_supplicant.conf"
+
+# Files in rpi config dir
 interfaces_template = "interfaces.template"
 wpa_template = "wpa_supplicant.wpa.conf.template"
 wep_template = "wpa_supplicant.wep.conf.template"
+pid_file = "config.pid"
 
-# Paths
+# System files
+settings_file = "settings.set"
+
+# ---------- Paths ----------
+# USB Paths
 usb_path = "/media/usb"
-settings_path = "/usr/local/opqd/settings.set"
 config_ini_path = os.path.join(usb_path, config_ini)
 custom_wpa_supplicant_path = os.path.join(usb_path, custom_wpa_supplicant)
-templates_path = "/home/pi/opq-hardware/rpi-firmware/rpid/config/templates"
+
+# Paths in rpi config dir
+config_path = "/home/pi/opq-hardware/rpi-firmware/rpid/config"
+templates_path = os.path.join(config_path, "templates")
 wpa_template_path = os.path.join(templates_path, wpa_template)
 wep_template_path = os.path.join(templates_path, wep_template)
+pid_path = os.path.join(config_path, pid_file)
+
+# System Paths
+settings_path = os.path.join("/usr/local/opqd/", settings_file)
 wpa_supplicant_path = "/etc/wpa_supplicant/wpa_supplicant.conf"
 
-# Display all parameters for debugging/sanity checks
-print "-- Files --"
-print "config_ini = " + config_ini
-print "custom_wpa_supplicant = " + custom_wpa_supplicant
-print "interfaces_template = " + interfaces_template
-print "wpa_template = " + wpa_template
-print "wep_template = " + wep_template
-print
-print "-- Paths --"
-print "usb_path = " + usb_path + " -- (exists " + str(os.path.exists(usb_path)) + ")"
-print "settings_path = " + settings_path + " -- (exists " + str(os.path.exists(settings_path)) + ")"
-print "config_ini_path = " + config_ini_path + " -- (exists " + str(os.path.exists(config_ini_path)) + ")"
-print "custom_wpa_supplicant_path = " + custom_wpa_supplicant_path + " -- (exists " + str(os.path.exists(custom_wpa_supplicant_path)) + ")"
-print "templates_path = " + templates_path + " -- (exists " + str(os.path.exists(templates_path)) + ")"
-print "wpa_template_path = " + wpa_template_path + " -- (exists " + str(os.path.exists(wpa_template_path)) + ")"
-print "wep_template_path = " + wep_template_path + " -- (exists " + str(os.path.exists(wep_template_path)) + ")"
-print
+def path_info(name, path):
+    return name + " = " + path + " -- (exists? " + str(os.path.exists(path)) + ")"
+
+def display_state():
+    print "---------- Files ----------"
+    print " USB files"
+    print "config_ini = " + config_ini
+    print "custom_wpa_supplicant = " + custom_wpa_supplicant
+    print
+    print "Files in rpi config dir"
+    print "interfaces_template = " + interfaces_template
+    print "wpa_template = " + wpa_template
+    print "wep_template = " + wep_template
+    print "pid_file = " + pid_file
+    print
+    print "System files"
+    print "settings_file = " + settings_file
+    print
+    print "---------- Paths ----------"
+    print "USB paths"
+    print path_info("usb_path", usb_path)
+    print path_info("config_ini_path", config_ini_path)
+    print path_info("custom_wpa_supplicant_path", custom_wpa_supplicant_path)
+    print
+    print "Paths in rpi config dir"
+    print path_info("config_path", config_path)
+    print path_info("templates_path", templates_path)
+    print path_info("wpa_template_path", wpa_template_path)
+    print path_info("wep_template_path", wep_template_path)
+    print path_info("pid_path", pid_path)
+    print
+    print "System paths"
+    print path_info("settings_path", settings_path)
+    print path_info("wpa_supplicant_path", wpa_supplicant_path)
+    print
+
+def write_pid():
+    f = open(pid_path, "w")
+    f.write(str(os.getpid()))
+    f.close() 
+
+def destroy_pid():
+    if os.path.exists(pid_path):
+        os.remove(pid_path) 
 
 def parse_config(path):
     parser = SafeConfigParser()
@@ -126,8 +168,7 @@ def restart_networking():
     call(["sudo", "ifup", "wlan0"])
     call(["sudo", "dhclient", "wlan0"])
 
-# Check for configuration file
-if os.path.exists(config_ini_path):
+def configure():
     # Read in configuration
     print "Configuration file " + config_ini_path + " found!"
     wifi_config, device_config = parse_config(config_ini_path)
@@ -164,21 +205,40 @@ if os.path.exists(config_ini_path):
     ifconfig = Popen("ifconfig", stdout=PIPE)
     output = ifconfig.communicate()[0]
     print output
-else:
-    print "ERROR: " + config_path + " not found!"
-    print
 
-# Check for provided wpa_supplicant.conf
-# Note: If wpa_supplicant.conf is found on usb, it will always be used
-# even if wifi-config.txt is specified.
-
-if os.path.exists(custom_wpa_supplicant_path):
+def copy_custom_wpa_supplicant():
     print "Custom configuration " + custom_wpa_supplicant_path + " found!"
     print "Copying " + custom_wpa_supplicant_path + " to device."
     print
     f = open(custom_wpa_supplicant_path, "r")
     supplicant = f.read()
     f.close()
-    
-    write_supplicant(supplicant, wpa_supplicant_path)
+
+    write_supplicant(supplicant, wpa_supplicant_path)  
+
+if __name__ == "__main__":
+    # Write PID file
+    write_pid()    
+ 
+    # Display state of system
+    display_state()
+
+    # Check for configuration file and configure
+    if os.path.exists(config_ini_path):
+        configure()
+    else:
+        print "ERROR: " + config_path + " not found!"
+        print
+
+    # Check for provided wpa_supplicant.conf
+    # Note: If wpa_supplicant.conf is found on usb, it will always be used
+    # for configuring wireless, even if config.ini is specified.
+    if os.path.exists(custom_wpa_supplicant_path):
+        copy_custom_wpa_supplicant()
+
+    # Destroy PID file
+    destroy_pid()
+
+
+
 
