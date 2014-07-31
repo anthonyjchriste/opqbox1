@@ -92,7 +92,9 @@ def parse_config(path):
     parser.read(path)
     
     config_fields = {"wifi_config": ["ssid", "key", "security"],
-              "device_config": ["access_key", "opqhub_addr"]}
+              "device_config": ["access_key", "opqhub_addr", "event_throttle",
+                                "expected_voltage", "voltage_tolerance",
+                                "expected_frequency", "frequency_tolerance"]}
               
     wifi_results = {}
     device_results = {}
@@ -124,6 +126,16 @@ def update_settings(device_settings, settings_file):
             results.append("device.key              :S  :" + device_settings["access_key"] + "\n")
         elif line.startswith("ws.url"):
             results.append("ws.url                  :S  :" + device_settings["opqhub_addr"] + "\n")
+        elif line.startswith("filter.thresh.f"):
+            results.append("filter.thresh.f         :F  :" + device_settings["frequency_tolerance"] + "\n")
+        elif line.startswith("filter.thresh.vrms"):
+            results.append("filter.thresh.vrms      :F  :" + device_settings["voltage_tolerance"] + "\n")
+        elif line.startswith("filter.expected.f"):
+            results.append("filter.expected.f       :F  :" + device_settings["expected_frequency"] + "\n")
+        elif line.startswith("filter.expected.vrms"):
+            results.append("filter.expected.vrms    :F  :" + device_settings["expected_voltage"] + "\n")
+        elif line.startswith("filter.expected.vrms"):
+            results.append("device.throttle         :I  :" + device_settings["event_throttle"] + "\n")         
         else:
             results.append(line)
             
