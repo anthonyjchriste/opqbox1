@@ -29,12 +29,9 @@ install:
 	chmod +x /etc/init.d/opqd
 	update-rc.d opqd defaults
 
-	cp usbd.sh /etc/init.d/usbd
-	chmod 755 /etc/init.d/usbd
-	chmod +x /etc/init.d/usbd
-	update-rc.d usbd defaults
+	cp config/configd.sh /etc/init.d/configd
+	chmod 755 /etc/init.d/configd
+	chmod +x /etc/init.d/configd
+	update-rc.d configd defaults
 		
 	cp opqd /usr/local/bin
-
-	cp contrib/devmon /usr/local/bin
-	chmod ugo+rx /usr/local/bin/devmon
