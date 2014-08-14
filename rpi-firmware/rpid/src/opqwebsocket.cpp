@@ -19,20 +19,36 @@ OpqWebsocket::OpqWebsocket(FrameQueuePointer iq)
     opqSettings_ = OpqSettings::Instance();
     wsUrl_ = boost::get<std::string>(opqSettings_->getSetting("ws.url"));
     deviceId_ = boost::get<uint64_t>(opqSettings_->getSetting("device.id"));
-    ws_ = easywsclient::WebSocket::from_url(wsUrl_);
     deviceKey_ = boost::get<std::string>(opqSettings_->getSetting("device.key"));
     pingInterval_ = boost::get<int32_t>(opqSettings_->getSetting("device.pinginterval"));
     throttle_ = boost::get<int32_t>(opqSettings_->getSetting("device.throttle"));
-
-    if(ws_ == NULL) throw std::runtime_error("Websocket not connected");
     time(&lastPing_);
-    sendPingPacket();
     lastEvent_ = 0;
     iq_ = iq;
+    ws_ == NULL;
+}
+
+void OpqWebsocket::init()
+{
+    if(ws_ != NULL)
+    {
+        delete ws_;
+        ws_ = NULL;
+    }
+    while(ws_ == NULL)
+    {
+        boost::this_thread::sleep(boost::posix_time::microseconds(1000));
+        ws_ = easywsclient::WebSocket::from_url(wsUrl_);
+        boost::this_thread::interruption_point();
+    }
 }
 
 void OpqWebsocket::callback(std::string message)
 {
+    if(ws_->getReadyState() != easywsclient::WebSocket::OPEN)
+    {
+        return;
+    }
     OpqPacket recv(message);
     recv.debugInfo();
     std::string p((const char *)recv.payload.data());
@@ -90,8 +106,14 @@ void OpqWebsocket::run()
 
     try
     {
+        init();
+        sendPingPacket();
         while(true)
         {
+            if(ws_ == NULL || ws_->getReadyState() != easywsclient::WebSocket::OPEN)
+            {
+                    init();
+            }
             // Check device queue
             bool ok;
             OpqFrame* next = iq_->pop_timeout(10, ok);
@@ -101,13 +123,12 @@ void OpqWebsocket::run()
             }
 
             // Check for messages from cloud
-            if(ws_ != NULL)
-            {
                 boost::function<void (std::string)> f;
                 f = boost::bind(&OpqWebsocket::callback, this, _1);
                 ws_->poll(10);
                 ws_->dispatch(f);
-            }
+
+
 
             // Check if we need to send a ping
             

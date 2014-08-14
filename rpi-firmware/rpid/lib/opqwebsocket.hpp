@@ -14,6 +14,7 @@ class OpqWebsocket
 {
 public:
     OpqWebsocket(FrameQueuePointer iq);
+    void init();
     void listen();
     void send(std::string message);
     void send(OpqPacket packet);
@@ -27,6 +28,7 @@ public:
         {
             ws_->close();
         }
+        delete ws_;
     }
 
 private:
