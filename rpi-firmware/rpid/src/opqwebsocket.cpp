@@ -164,7 +164,7 @@ void OpqWebsocket::constructAndSend(OpqFrame *frame) {
     char * json;
 
     jsonify(&json, (uint32_t) 0x00C0FFEE, packetType, deviceId_, deviceKey_, timestamp,
-           (uint64_t) 0, (uint32_t) 0, frequency, voltage, (uint32_t) payload.size(), payload);
+           duration, (uint32_t) 0, frequency, voltage, (uint32_t) payload.size(), payload);
 
     send(std::string(json));
     free(json);
