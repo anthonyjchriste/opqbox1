@@ -36,7 +36,7 @@ void FilterTask::run()
         while(true)
         {
             OpqFrame* next = iq_->pop();
-            PacketType type;
+            PacketType type = FBAD;
             double Fthresh = boost::get<double>(set->getSetting("filter.thresh.f"));
             double Vthresh = boost::get<double>(set->getSetting("filter.thresh.vrms"));
             double Fmeas = boost::get<double>(next->parameters["f"]);
@@ -86,6 +86,7 @@ void FilterTask::run()
                     break;
                 case FGOOD:
                     delete next;
+                    break;
                 }
                 break;
             case FACCUMULATING:
@@ -96,8 +97,6 @@ void FilterTask::run()
                     delete next;
                     break;
                 case FMEASUREMENT:
-                    oq_->push(next);
-                    break;
                 case FGOOD:
                     delete next;
                     oq_->push(last);
