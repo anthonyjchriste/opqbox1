@@ -3,7 +3,6 @@
 
 #include "datastructures.hpp"
 #include "easywsclient.hpp"
-#include "opqpacket.hpp"
 
 #include <cstdint>
 #include <ctime>
@@ -17,7 +16,6 @@ public:
     void init();
     void listen();
     void send(std::string message);
-    void send(OpqPacket packet);
     void sendPingPacket();
     void run();
     std::queue<OpqFrame> frames;

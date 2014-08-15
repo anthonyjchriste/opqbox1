@@ -1,6 +1,5 @@
 #include "coresettings.hpp"
 #include "datastructures.hpp"
-#include "opqpacket.hpp"
 #include "opqwebsocket.hpp"
 #include "opqjson.h"
 
@@ -119,7 +118,7 @@ void OpqWebsocket::sendPingPacket()
     char * json;
 
     jsonify(&json, (uint32_t) 0x00C0FFEE, (uint32_t) 0, deviceId_, deviceKey_, timestamp,
-           duration, (uint32_t) 0, 0.0, 0.0, (uint32_t) 0, payload);
+           0, (uint32_t) 0, 0.0, 0.0, (uint32_t) 0, payload);
 
     send(std::string(json));
     free(json);

@@ -31,6 +31,7 @@ struct OpqFrame
 {
     uint32_t timeSec;               ///Time of acquisition sec.
     uint32_t timeUsec;              ///Time of acquisition in usec.
+    uint32_t duration;
     std::vector<double>  data;      ///Voltages.
     std::vector<double>  fft;       ///Power spectrum of the voltage.
     OpqParameters parameters;       ///Feature extraction and analisys parameters.
