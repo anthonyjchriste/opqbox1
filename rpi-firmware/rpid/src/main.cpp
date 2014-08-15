@@ -10,7 +10,6 @@
 #include "analysistask.hpp"
 #include "filtertask.hpp"
 #include "opqwebsocket.hpp"
-#include "opqpacket.hpp"
 
 #include <boost/thread/thread.hpp>
 #include <boost/date_time.hpp>

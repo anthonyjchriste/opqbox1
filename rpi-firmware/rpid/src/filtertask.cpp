@@ -1,7 +1,9 @@
 #include "../lib/filtertask.hpp"
 #include "coresettings.hpp"
-#include "opqpacket.hpp"
 #include "pinctl.hpp"
+
+enum FilterState {FIDLE, FACCUMULATING};
+enum PacketType {FGOOD, FMEASUREMENT, FBAD};
 FilterTask::FilterTask(FrameQueuePointer iq, FrameQueuePointer oq)
 {
     oq_ = oq;
@@ -28,9 +30,13 @@ void FilterTask::run()
         int updateF = boost::get<int>(set->getSetting("filter.measurement.f"));
 
         int frameCounter = 0;
+        OpqFrame* last = NULL;
+        FilterState state= FIDLE;
+
         while(true)
         {
             OpqFrame* next = iq_->pop();
+            PacketType type;
             double Fthresh = boost::get<double>(set->getSetting("filter.thresh.f"));
             double Vthresh = boost::get<double>(set->getSetting("filter.thresh.vrms"));
             double Fmeas = boost::get<double>(next->parameters["f"]);
@@ -39,15 +45,15 @@ void FilterTask::run()
             {
                 frameCounter = 0;
                 next->parameters["event.type"] = EVENT_FREQUENCY;
-                oq_->push(next);
                 setPinValue(LED2, LOW);
+                type = FBAD;
             }
             else if(fabs(Vexp - Vmeas) >= Vthresh)
             {
                 frameCounter = 0;
                 next->parameters["event.type"] = EVENT_VOLTAGE;
-                oq_->push(next);
                 setPinValue(LED2, LOW);
+                type = FBAD;
             }
             else
             {
@@ -56,16 +62,50 @@ void FilterTask::run()
                 {
                     next->parameters["event.type"] = MEASUREMENT;
                     setPinValue(LED2, LOW);
-                    oq_->push(next);
                     frameCounter = 0;
+                    type = FMEASUREMENT;
                 }
                 else
                 {
                     setPinValue(LED2, HIGH);
-                    delete next;
+                    type = FGOOD;
                 }
             }
-            boost::this_thread::interruption_point();
+
+            switch(state)
+            {
+            case FIDLE:
+                switch(type)
+                {
+                case FBAD:
+                    last = next;
+                    state = FACCUMULATING;;
+                    break;
+                case FMEASUREMENT:
+                    oq_->push(next);
+                    break;
+                case FGOOD:
+                    delete next;
+                }
+                break;
+            case FACCUMULATING:
+                switch(type)
+                {
+                case FBAD:
+                    last->duration++;
+                    delete next;
+                    break;
+                case FMEASUREMENT:
+                    oq_->push(next);
+                    break;
+                case FGOOD:
+                    delete next;
+                    oq_->push(last);
+                    state = FIDLE;
+                    break;
+                }
+                break;
+            }
         }
     }
     catch(boost::thread_interrupted &e)

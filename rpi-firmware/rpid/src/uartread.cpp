@@ -64,6 +64,7 @@ OpqFrame* uartRead(Msp430Uart& uart, size_t len)
     gettimeofday(&tv,NULL);
     ret->timeSec = tv.tv_sec;
     ret->timeUsec = tv.tv_usec;
+    ret->duration = 1;
     int index = 0;
     for(int i = 0; i< 12;)
     {
