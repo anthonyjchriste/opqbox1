@@ -37,3 +37,17 @@ lib/filtertask.hpp
 src/filtertask.cpp
 settings.set
 opqd.sh
+lib/acquisitiontask.hpp
+lib/analysistask.hpp
+lib/coredataqueue.hpp
+lib/coresettings.hpp
+lib/datastructures.hpp
+lib/filtertask.hpp
+lib/gausianpeak.hpp
+lib/opqjson.h
+lib/opqwebsocket.hpp
+lib/pinctl.hpp
+lib/powerspectrum.hpp
+lib/powertransformtask.hpp
+lib/rmsvoltage.hpp
+lib/uartread.hpp
