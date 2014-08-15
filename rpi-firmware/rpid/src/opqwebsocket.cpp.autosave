@@ -37,7 +37,7 @@ void OpqWebsocket::init()
     }
     while(ws_ == NULL)
     {
-        boost::this_thread::sleep(boost::posix_time::microseconds(1000));
+        boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
         ws_ = easywsclient::WebSocket::from_url(wsUrl_);
         boost::this_thread::interruption_point();
     }
