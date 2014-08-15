@@ -47,4 +47,14 @@ typedef pland::Data_Queue<OpqFrame*> FrameQueue;
  */
 typedef boost::shared_ptr<FrameQueue> FrameQueuePointer;
 
+enum OpqPacketType {
+   MEASUREMENT = 0,
+   EVENT_FREQUENCY = 1,
+   EVENT_VOLTAGE = 2,
+   EVENT_DEVICE = 3,
+   PING = 4,
+   SETTING = 5,
+   MONITOR = 6
+};
+
 #endif // DATASTRUCTURES_HPP
