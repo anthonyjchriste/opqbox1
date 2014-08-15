@@ -25,7 +25,7 @@ OpqWebsocket::OpqWebsocket(FrameQueuePointer iq)
     time(&lastPing_);
     lastEvent_ = 0;
     iq_ = iq;
-    ws_ == NULL;
+    ws_ = NULL;
 }
 
 void OpqWebsocket::init()
@@ -37,7 +37,7 @@ void OpqWebsocket::init()
     }
     while(ws_ == NULL)
     {
-        boost::this_thread::sleep(boost::posix_time::microseconds(1000));
+        boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
         ws_ = easywsclient::WebSocket::from_url(wsUrl_);
         boost::this_thread::interruption_point();
     }
@@ -49,54 +49,7 @@ void OpqWebsocket::callback(std::string message)
     {
         return;
     }
-    OpqPacket recv(message);
-    recv.debugInfo();
-    std::string p((const char *)recv.payload.data());
-
-    vector<std::string> tokens;
-    boost::split(tokens, p, boost::is_any_of(":"));
-
-    std::string setting = tokens[0];
-    std::string type =  tokens[1];
-    std::string value = tokens[2];
-
-    std::cout << setting << " " << type << " " << value << std::endl << std::flush;
-    switch(recv.header.type)
-    {
-        case OpqPacketType::SETTING: {
-            OpqSetting setValue;
-            switch (type.at(0))
-            {
-                case 'U':
-                    setValue = boost::lexical_cast<uint64_t>(value);
-                    break;
-                case 'F':
-                    setValue = boost::lexical_cast<double>(value);
-                    break;
-                case 'I':
-                    setValue = boost::lexical_cast<int>(value);
-                    break;
-                case 'S':
-                    setValue = value;
-                    break;
-                case 'B':
-                    if(value == "TRUE")
-                        setValue = true;
-                    else
-                        setValue = false;
-                    break;
-                default:
-                    throw boost::bad_lexical_cast();
-            }
-
-            opqSettings_->setSetting(setting, setValue);
-            opqSettings_->saveToFile("settings.set");
-            break;
-        }
-
-     default:
-        break;
-    }
+    std::cout << "ws recv:" << message << "\n";
 }
 
 void OpqWebsocket::run()
@@ -128,10 +81,8 @@ void OpqWebsocket::run()
                 ws_->poll(10);
                 ws_->dispatch(f);
 
-
-
             // Check if we need to send a ping
-            
+
             time(&ts);
             timeDiff = difftime(ts, lastPing_);
             if(timeDiff > pingInterval_)
@@ -139,7 +90,6 @@ void OpqWebsocket::run()
                 sendPingPacket();
                 time(&lastPing_);
             }
-            
 
             // Check if we've been interrupted
             boost::this_thread::interruption_point();
@@ -165,19 +115,14 @@ void OpqWebsocket::sendPingPacket()
     gettimeofday(&tv, NULL);
     uint64_t timestamp = (uint64_t) tv.tv_sec * 1000 + (uint64_t) tv.tv_usec / 1000;
     std::vector<double> payload;
-    
+
     char * json;
 
     jsonify(&json, (uint32_t) 0x00C0FFEE, (uint32_t) 0, deviceId_, deviceKey_, timestamp,
-           (uint64_t) 0, (uint32_t) 0, 0.0, 0.0, (uint32_t) 0, payload);
+           duration, (uint32_t) 0, 0.0, 0.0, (uint32_t) 0, payload);
 
     send(std::string(json));
     free(json);
-}
-
-void OpqWebsocket::send(OpqPacket packet)
-{
-    send(packet.encodeOpqPacket());
 }
 
 void OpqWebsocket::handleFrame(OpqFrame *frame)
@@ -186,7 +131,7 @@ void OpqWebsocket::handleFrame(OpqFrame *frame)
     time_t ts;
     double timeDiff;
     uint32_t packetType = boost::get<int>(parameters["event.type"]);
-    
+
     // Throttle event and frequency events
     if(packetType == OpqPacketType::EVENT_FREQUENCY || packetType == OpqPacketType::EVENT_VOLTAGE) {
         time(&ts);
@@ -207,11 +152,9 @@ void OpqWebsocket::constructAndSend(OpqFrame *frame) {
     uint32_t packetType = boost::get<int>(parameters["event.type"]);
     double frequency = (parameters.find("f") == parameters.end()) ? 0.0 : boost::get<double>(parameters["f"]);
     double voltage = (parameters.find("vrms") == parameters.end()) ? 0.0 : boost::get<double>(parameters["vrms"]);
+    uint32_t duration = frame->duration;
+    uint64_t timestamp = (uint64_t) frame->timeSec * 1000 + (uint64_t) frame->timeUsec / 1000;
 
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    uint64_t timestamp = (uint64_t) tv.tv_sec * 1000 + (uint64_t) tv.tv_usec / 1000;
-    
     std::vector<double> payload;
     for(int i = 0; i < frame->data.size(); i++) {
       payload.push_back(frame->data[i]);

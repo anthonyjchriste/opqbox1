@@ -8,7 +8,7 @@
 #include <vector>
 
 int jsonify(char ** json, uint32_t magicWord, uint32_t packetType, uint64_t deviceId,
-            std::string deviceKey,uint64_t timestamp, uint64_t duration, uint32_t checksum,
+            std::string deviceKey,uint64_t timestamp, uint32_t duration, uint32_t checksum,
             double frequency, double voltage, uint32_t payloadSize, std::vector<double> payload) {
 
     std::stringstream ss;
@@ -28,7 +28,7 @@ int jsonify(char ** json, uint32_t magicWord, uint32_t packetType, uint64_t devi
         "\"packetType\":%d, "
         "\"deviceId\":%llu, "
         "\"deviceKey\":\"%s\", "
-        "\"timestamp\":%llu, "
+        "\"timestamp\":%u, "
         "\"duration\":%llu, "
         "\"checksum\":%d, "
         "\"frequency\":%f, "
