@@ -15,7 +15,6 @@ void AnalysisTask::run()
         OpqSettings* set = OpqSettings::Instance();
         double SAMPLING_RATE = boost::get<double>(set->getSetting("cal.sampling_rate"));
         double VOLTAGE_SCALING = boost::get<double>(set->getSetting("cal.voltage_scaling"));
-        OpqFrame* last = NULL;
         while(true)
         {
             OpqFrame* next = iq_->pop();
@@ -49,7 +48,6 @@ void AnalysisTask::run()
             {
                 next->data[i] *= VOLTAGE_SCALING;
             }
-            last = next;
             oq_->push(next);
             boost::this_thread::interruption_point();
         }
