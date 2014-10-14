@@ -20,7 +20,6 @@ OpqWebsocket::OpqWebsocket(FrameQueuePointer iq)
     deviceId_ = boost::get<uint64_t>(opqSettings_->getSetting("device.id"));
     deviceKey_ = boost::get<std::string>(opqSettings_->getSetting("device.key"));
     pingInterval_ = boost::get<int32_t>(opqSettings_->getSetting("device.pinginterval"));
-    throttle_ = boost::get<int32_t>(opqSettings_->getSetting("device.throttle"));
     time(&lastPing_);
     lastEvent_ = 0;
     iq_ = iq;
@@ -132,18 +131,7 @@ void OpqWebsocket::handleFrame(OpqFrame *frame)
     uint32_t packetType = boost::get<int>(parameters["event.type"]);
 
     // Throttle event and frequency events
-    if(packetType == OpqPacketType::EVENT_FREQUENCY || packetType == OpqPacketType::EVENT_VOLTAGE) {
-        time(&ts);
-        timeDiff = difftime(ts, lastEvent_);
-        if(timeDiff > throttle_)
-        {
-            constructAndSend(frame);
-            time(&lastEvent_);
-        }
-    }
-    else {
-        constructAndSend(frame);
-    }
+    constructAndSend(frame);
 }
 
 void OpqWebsocket::constructAndSend(OpqFrame *frame) {

@@ -32,7 +32,7 @@ config_ini_path = os.path.join(usb_path, config_ini)
 custom_wpa_supplicant_path = os.path.join(usb_path, custom_wpa_supplicant)
 
 # Paths in rpi config dir
-config_path = "/home/pi/opq-hardware/rpi-firmware/rpid/config"
+config_path = "/home/pi/Gen1/Software/rpi-firmware/rpid/config"
 templates_path = os.path.join(config_path, "templates")
 wpa_template_path = os.path.join(templates_path, wpa_template)
 wep_template_path = os.path.join(templates_path, wep_template)

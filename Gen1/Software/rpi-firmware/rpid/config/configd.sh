@@ -8,7 +8,7 @@
 # Description:       opq power quality config monitoring daemon
 ### END INIT INFO
 
-CONFIG_PATH="/home/pi/opq-hardware/rpi-firmware/rpid/config"
+CONFIG_PATH="/home/pi/Gen1/Software/rpi-firmware/rpid/config"
 CONFIG_LOG="$CONFIG_PATH/config.log"
 SCRIPT="$CONFIG_PATH/config.py"
 CMD="sudo python $SCRIPT &"

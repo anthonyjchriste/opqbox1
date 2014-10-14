@@ -4,3 +4,4 @@ rpi-firmware/rpid/*.autosave
 rpi-firmware/rpid/rpid.creator.user*
 rpi-firmware/rpid/settings.set
 *.log
+*~
