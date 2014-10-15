@@ -30,6 +30,7 @@ void FilterTask::run()
         int updateF = boost::get<int>(set->getSetting("filter.measurement.f"));
 
         int frameCounter = 0;
+        int badCounter = 0;
         OpqFrame* last = NULL;
         FilterState state= FIDLE;
 
@@ -41,6 +42,7 @@ void FilterTask::run()
             double Vthresh = boost::get<double>(set->getSetting("filter.thresh.vrms"));
             double Fmeas = boost::get<double>(next->parameters["f"]);
             double Vmeas = boost::get<double>(next->parameters["vrms"]);
+            std::cout << Vmeas << std::endl;
             if(fabs(Fexp - Fmeas) >= Fthresh)
             {
                 frameCounter = 0;
@@ -71,7 +73,6 @@ void FilterTask::run()
                     type = FGOOD;
                 }
             }
-
             switch(state)
             {
             case FIDLE:
@@ -93,12 +94,18 @@ void FilterTask::run()
                 switch(type)
                 {
                 case FBAD:
-                    last->duration++;
-                    delete next;
-                    break;
+                    if(badCounter < 15)
+                    {
+                        last->duration++;
+                        delete next;
+                        badCounter++;
+                        break;
+                    }
+
                 case FMEASUREMENT:
                 case FGOOD:
                     delete next;
+                    badCounter = 0;
                     oq_->push(last);
                     state = FIDLE;
                     break;
